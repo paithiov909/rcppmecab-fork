@@ -4,8 +4,8 @@
 \alias{pos}
 \title{part-of-speech tagger}
 \usage{
-pos(sentence, join = TRUE, format = c("list", "data.frame"), sys_dic = "",
-  user_dic = "")
+pos(sentence, join = TRUE, format = c("list", "data.frame"),
+  sys_dic = "", user_dic = "")
 }
 \arguments{
 \item{sentence}{A character vector of any length. For analyzing multiple sentences, put them in one character vector.}

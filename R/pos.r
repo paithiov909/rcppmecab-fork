@@ -38,6 +38,7 @@
 #' }
 #'
 #' @export
+#' @useDynLib
 pos <- function(sentence, join = TRUE, format = c("list", "data.frame"), sys_dic = "", user_dic = "") {
   if (typeof(sentence) != "character") {
     if (typeof(sentence) == "factor") {
@@ -53,6 +54,9 @@ pos <- function(sentence, join = TRUE, format = c("list", "data.frame"), sys_dic
 
   if (format == "data.frame") {
     result <- posDFRcpp(sentence, sys_dic, user_dic)
+    result$doc_id <- factor(result$doc_id,
+                            levels = seq_along(sentence),
+                            labels = names(sentence))
   } else{
     if (join == TRUE) {
       if (length(sentence) > 1) {

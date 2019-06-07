@@ -43,6 +43,7 @@
 #' }
 #'
 #' @export
+#' @useDynLib
 posParallel <- function(sentence, join = TRUE, format = c("list", "data.frame"), sys_dic = "", user_dic = "") {
   if (typeof(sentence) != "character") {
     if (typeof(sentence) == "factor") {
@@ -58,6 +59,9 @@ posParallel <- function(sentence, join = TRUE, format = c("list", "data.frame"),
 
   if (format == "data.frame") {
     result <- posParallelDFRcpp(sentence, sys_dic, user_dic)
+    result$doc_id <- factor(result$doc_id,
+                            levels = seq_along(sentence),
+                            labels = names(sentence))
   } else {
     if (join == TRUE) {
       result <- posParallelJoinRcpp(sentence, sys_dic, user_dic)
