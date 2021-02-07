@@ -1,4 +1,5 @@
 test_that("Test if posSimple works on Japanese", {
+  skip_if(.Platform$OS.type == "windows", "OS.type is windows. Skip testing.")
   skip_if_not(isDynAvailable(), "No libmecab available. Skip testing.")
   skip_if_not(Sys.getenv("MECAB_LANG") == "ja", "MECAB_LANG is not ja. Skip testing.")
   ## posSimple()
@@ -11,6 +12,7 @@ test_that("Test if posSimple works on Japanese", {
 })
 
 test_that("Test if posSimple fails", {
+  skip_if(.Platform$OS.type == "windows", "OS.type is windows. Skip testing.")
   skip_if_not(isDynAvailable(), "No libmecab available. Skip testing.")
   skip_if_not(Sys.getenv("MECAB_LANG") == "ja", "MECAB_LANG is not ja. Skip testing.")
   ## posSimple()
