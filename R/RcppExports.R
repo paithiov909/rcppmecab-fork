@@ -13,24 +13,20 @@ posParallelRcpp <- function(text, sys_dic, user_dic) {
     .Call(`_RcppMeCab_posParallelRcpp`, text, sys_dic, user_dic)
 }
 
-posRcpp <- function(text, sys_dic, user_dic) {
-    .Call(`_RcppMeCab_posRcpp`, text, sys_dic, user_dic)
+posApplyRcpp <- function(text, sys_dic, user_dic) {
+    .Call(`_RcppMeCab_posApplyRcpp`, text, sys_dic, user_dic)
 }
 
-posJoinRcpp <- function(text, sys_dic, user_dic) {
-    .Call(`_RcppMeCab_posJoinRcpp`, text, sys_dic, user_dic)
+posApplyJoinRcpp <- function(text, sys_dic, user_dic) {
+    .Call(`_RcppMeCab_posApplyJoinRcpp`, text, sys_dic, user_dic)
 }
 
-posLoopRcpp <- function(text, sys_dic, user_dic) {
-    .Call(`_RcppMeCab_posLoopRcpp`, text, sys_dic, user_dic)
+posApplyDFRcpp <- function(text, sys_dic, user_dic) {
+    .Call(`_RcppMeCab_posApplyDFRcpp`, text, sys_dic, user_dic)
 }
 
-posLoopJoinRcpp <- function(text, sys_dic, user_dic) {
-    .Call(`_RcppMeCab_posLoopJoinRcpp`, text, sys_dic, user_dic)
-}
-
-posDFRcpp <- function(text, sys_dic, user_dic) {
-    .Call(`_RcppMeCab_posDFRcpp`, text, sys_dic, user_dic)
+posLoopDFRcpp <- function(text, sys_dic, user_dic) {
+    .Call(`_RcppMeCab_posLoopDFRcpp`, text, sys_dic, user_dic)
 }
 
 # Register entry points for exported C++ functions

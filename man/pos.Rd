@@ -15,7 +15,7 @@ pos(
 \arguments{
 \item{sentence}{A character vector of any length. For analyzing multiple sentences, put them in one character vector.}
 
-\item{join}{A bool to decide the output format. The default value is TRUE. If FALSE, the function will return morphemes only, and tags put in the attribute. if \code{format="data.frame"}, then this will be ignored.}
+\item{join}{A logical to decide the output format. The default value is TRUE. If FALSE, the function will return morphemes only, and tags put in the attribute. if \code{format="data.frame"}, then this will be ignored.}
 
 \item{format}{A data type for the result. The default value is "list". You can set this to "data.frame" to get a result as data frame format.}
 

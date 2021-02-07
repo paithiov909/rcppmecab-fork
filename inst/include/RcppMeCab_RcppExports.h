@@ -87,17 +87,17 @@ namespace RcppMeCab {
         return Rcpp::as<List >(rcpp_result_gen);
     }
 
-    inline List posRcpp(std::string text, std::string sys_dic, std::string user_dic) {
-        typedef SEXP(*Ptr_posRcpp)(SEXP,SEXP,SEXP);
-        static Ptr_posRcpp p_posRcpp = NULL;
-        if (p_posRcpp == NULL) {
-            validateSignature("List(*posRcpp)(std::string,std::string,std::string)");
-            p_posRcpp = (Ptr_posRcpp)R_GetCCallable("RcppMeCab", "_RcppMeCab_posRcpp");
+    inline List posApplyRcpp(StringVector text, std::string sys_dic, std::string user_dic) {
+        typedef SEXP(*Ptr_posApplyRcpp)(SEXP,SEXP,SEXP);
+        static Ptr_posApplyRcpp p_posApplyRcpp = NULL;
+        if (p_posApplyRcpp == NULL) {
+            validateSignature("List(*posApplyRcpp)(StringVector,std::string,std::string)");
+            p_posApplyRcpp = (Ptr_posApplyRcpp)R_GetCCallable("RcppMeCab", "_RcppMeCab_posApplyRcpp");
         }
         RObject rcpp_result_gen;
         {
             RNGScope RCPP_rngScope_gen;
-            rcpp_result_gen = p_posRcpp(Shield<SEXP>(Rcpp::wrap(text)), Shield<SEXP>(Rcpp::wrap(sys_dic)), Shield<SEXP>(Rcpp::wrap(user_dic)));
+            rcpp_result_gen = p_posApplyRcpp(Shield<SEXP>(Rcpp::wrap(text)), Shield<SEXP>(Rcpp::wrap(sys_dic)), Shield<SEXP>(Rcpp::wrap(user_dic)));
         }
         if (rcpp_result_gen.inherits("interrupted-error"))
             throw Rcpp::internal::InterruptedException();
@@ -108,17 +108,17 @@ namespace RcppMeCab {
         return Rcpp::as<List >(rcpp_result_gen);
     }
 
-    inline List posJoinRcpp(std::string text, std::string sys_dic, std::string user_dic) {
-        typedef SEXP(*Ptr_posJoinRcpp)(SEXP,SEXP,SEXP);
-        static Ptr_posJoinRcpp p_posJoinRcpp = NULL;
-        if (p_posJoinRcpp == NULL) {
-            validateSignature("List(*posJoinRcpp)(std::string,std::string,std::string)");
-            p_posJoinRcpp = (Ptr_posJoinRcpp)R_GetCCallable("RcppMeCab", "_RcppMeCab_posJoinRcpp");
+    inline List posApplyJoinRcpp(StringVector text, std::string sys_dic, std::string user_dic) {
+        typedef SEXP(*Ptr_posApplyJoinRcpp)(SEXP,SEXP,SEXP);
+        static Ptr_posApplyJoinRcpp p_posApplyJoinRcpp = NULL;
+        if (p_posApplyJoinRcpp == NULL) {
+            validateSignature("List(*posApplyJoinRcpp)(StringVector,std::string,std::string)");
+            p_posApplyJoinRcpp = (Ptr_posApplyJoinRcpp)R_GetCCallable("RcppMeCab", "_RcppMeCab_posApplyJoinRcpp");
         }
         RObject rcpp_result_gen;
         {
             RNGScope RCPP_rngScope_gen;
-            rcpp_result_gen = p_posJoinRcpp(Shield<SEXP>(Rcpp::wrap(text)), Shield<SEXP>(Rcpp::wrap(sys_dic)), Shield<SEXP>(Rcpp::wrap(user_dic)));
+            rcpp_result_gen = p_posApplyJoinRcpp(Shield<SEXP>(Rcpp::wrap(text)), Shield<SEXP>(Rcpp::wrap(sys_dic)), Shield<SEXP>(Rcpp::wrap(user_dic)));
         }
         if (rcpp_result_gen.inherits("interrupted-error"))
             throw Rcpp::internal::InterruptedException();
@@ -129,17 +129,17 @@ namespace RcppMeCab {
         return Rcpp::as<List >(rcpp_result_gen);
     }
 
-    inline List posLoopRcpp(std::vector< std::string > text, std::string sys_dic, std::string user_dic) {
-        typedef SEXP(*Ptr_posLoopRcpp)(SEXP,SEXP,SEXP);
-        static Ptr_posLoopRcpp p_posLoopRcpp = NULL;
-        if (p_posLoopRcpp == NULL) {
-            validateSignature("List(*posLoopRcpp)(std::vector< std::string >,std::string,std::string)");
-            p_posLoopRcpp = (Ptr_posLoopRcpp)R_GetCCallable("RcppMeCab", "_RcppMeCab_posLoopRcpp");
+    inline List posApplyDFRcpp(StringVector text, std::string sys_dic, std::string user_dic) {
+        typedef SEXP(*Ptr_posApplyDFRcpp)(SEXP,SEXP,SEXP);
+        static Ptr_posApplyDFRcpp p_posApplyDFRcpp = NULL;
+        if (p_posApplyDFRcpp == NULL) {
+            validateSignature("List(*posApplyDFRcpp)(StringVector,std::string,std::string)");
+            p_posApplyDFRcpp = (Ptr_posApplyDFRcpp)R_GetCCallable("RcppMeCab", "_RcppMeCab_posApplyDFRcpp");
         }
         RObject rcpp_result_gen;
         {
             RNGScope RCPP_rngScope_gen;
-            rcpp_result_gen = p_posLoopRcpp(Shield<SEXP>(Rcpp::wrap(text)), Shield<SEXP>(Rcpp::wrap(sys_dic)), Shield<SEXP>(Rcpp::wrap(user_dic)));
+            rcpp_result_gen = p_posApplyDFRcpp(Shield<SEXP>(Rcpp::wrap(text)), Shield<SEXP>(Rcpp::wrap(sys_dic)), Shield<SEXP>(Rcpp::wrap(user_dic)));
         }
         if (rcpp_result_gen.inherits("interrupted-error"))
             throw Rcpp::internal::InterruptedException();
@@ -150,38 +150,17 @@ namespace RcppMeCab {
         return Rcpp::as<List >(rcpp_result_gen);
     }
 
-    inline List posLoopJoinRcpp(std::vector< std::string > text, std::string sys_dic, std::string user_dic) {
-        typedef SEXP(*Ptr_posLoopJoinRcpp)(SEXP,SEXP,SEXP);
-        static Ptr_posLoopJoinRcpp p_posLoopJoinRcpp = NULL;
-        if (p_posLoopJoinRcpp == NULL) {
-            validateSignature("List(*posLoopJoinRcpp)(std::vector< std::string >,std::string,std::string)");
-            p_posLoopJoinRcpp = (Ptr_posLoopJoinRcpp)R_GetCCallable("RcppMeCab", "_RcppMeCab_posLoopJoinRcpp");
+    inline DataFrame posLoopDFRcpp(StringVector text, std::string sys_dic, std::string user_dic) {
+        typedef SEXP(*Ptr_posLoopDFRcpp)(SEXP,SEXP,SEXP);
+        static Ptr_posLoopDFRcpp p_posLoopDFRcpp = NULL;
+        if (p_posLoopDFRcpp == NULL) {
+            validateSignature("DataFrame(*posLoopDFRcpp)(StringVector,std::string,std::string)");
+            p_posLoopDFRcpp = (Ptr_posLoopDFRcpp)R_GetCCallable("RcppMeCab", "_RcppMeCab_posLoopDFRcpp");
         }
         RObject rcpp_result_gen;
         {
             RNGScope RCPP_rngScope_gen;
-            rcpp_result_gen = p_posLoopJoinRcpp(Shield<SEXP>(Rcpp::wrap(text)), Shield<SEXP>(Rcpp::wrap(sys_dic)), Shield<SEXP>(Rcpp::wrap(user_dic)));
-        }
-        if (rcpp_result_gen.inherits("interrupted-error"))
-            throw Rcpp::internal::InterruptedException();
-        if (Rcpp::internal::isLongjumpSentinel(rcpp_result_gen))
-            throw Rcpp::LongjumpException(rcpp_result_gen);
-        if (rcpp_result_gen.inherits("try-error"))
-            throw Rcpp::exception(Rcpp::as<std::string>(rcpp_result_gen).c_str());
-        return Rcpp::as<List >(rcpp_result_gen);
-    }
-
-    inline DataFrame posDFRcpp(StringVector text, std::string sys_dic, std::string user_dic) {
-        typedef SEXP(*Ptr_posDFRcpp)(SEXP,SEXP,SEXP);
-        static Ptr_posDFRcpp p_posDFRcpp = NULL;
-        if (p_posDFRcpp == NULL) {
-            validateSignature("DataFrame(*posDFRcpp)(StringVector,std::string,std::string)");
-            p_posDFRcpp = (Ptr_posDFRcpp)R_GetCCallable("RcppMeCab", "_RcppMeCab_posDFRcpp");
-        }
-        RObject rcpp_result_gen;
-        {
-            RNGScope RCPP_rngScope_gen;
-            rcpp_result_gen = p_posDFRcpp(Shield<SEXP>(Rcpp::wrap(text)), Shield<SEXP>(Rcpp::wrap(sys_dic)), Shield<SEXP>(Rcpp::wrap(user_dic)));
+            rcpp_result_gen = p_posLoopDFRcpp(Shield<SEXP>(Rcpp::wrap(text)), Shield<SEXP>(Rcpp::wrap(sys_dic)), Shield<SEXP>(Rcpp::wrap(user_dic)));
         }
         if (rcpp_result_gen.inherits("interrupted-error"))
             throw Rcpp::internal::InterruptedException();

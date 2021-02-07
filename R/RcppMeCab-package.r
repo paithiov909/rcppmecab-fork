@@ -10,8 +10,6 @@
 #' @name RcppMeCab
 #' @docType package
 #' @author Junhewk Kim Taku Kudo
-#' @import Rcpp
-#' @importFrom RcppParallel RcppParallelLibs
 #' @details
 #' This package utilizes \code{MeCab} C API and \code{Rcpp} codes.
 #'

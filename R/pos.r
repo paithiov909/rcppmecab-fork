@@ -19,7 +19,7 @@
 #' Basically, the function will return a list of character vectors with (morpheme)/(tag) elements.
 #'
 #' @param sentence A character vector of any length. For analyzing multiple sentences, put them in one character vector.
-#' @param join A bool to decide the output format. The default value is TRUE. If FALSE, the function will return morphemes only, and tags put in the attribute. if \code{format="data.frame"}, then this will be ignored.
+#' @param join A logical to decide the output format. The default value is TRUE. If FALSE, the function will return morphemes only, and tags put in the attribute. if \code{format="data.frame"}, then this will be ignored.
 #' @param format A data type for the result. The default value is "list". You can set this to "data.frame" to get a result as data frame format.
 #' @param sys_dic A location of system MeCab dictionary. The default value is "".
 #' @param user_dic A location of user-specific MeCab dictionary. The default value is "".
@@ -49,23 +49,19 @@ pos <- function(sentence, join = TRUE, format = c("list", "data.frame"), sys_dic
 
   if (!is.null(getOption("mecabSysDic")) && !sys_dic == "") sys_dic = getOption("mecabSysDic")
 
-  format = match.arg(format)
+  sentence <- stringi::stri_enc_toutf8(sentence)
+  format <- match.arg(format)
+  sys_dic <- paste0(sys_dic, collapse = "")
+  user_dic <- paste0(user_dic, collapse = "")
 
   if (format == "data.frame") {
-    result <- posDFRcpp(sentence, sys_dic, user_dic)
-  } else{
+    result <- posLoopDFRcpp(sentence, sys_dic, user_dic)
+    result <- dplyr::mutate(result, dplyr::across(where(is.character), ~ dplyr::na_if(., "*")))
+  } else {
     if (join == TRUE) {
-      if (length(sentence) > 1) {
-        result <- posLoopJoinRcpp(sentence, sys_dic, user_dic)
-      } else {
-        result <- posJoinRcpp(sentence, sys_dic, user_dic)
-      }
+      result <- posApplyJoinRcpp(sentence, sys_dic, user_dic)
     } else {
-      if (length(sentence) > 1) {
-        result <- posLoopRcpp(sentence, sys_dic, user_dic)
-      } else {
-        result <- posRcpp(sentence, sys_dic, user_dic)
-      }
+      result <- posApplyRcpp(sentence, sys_dic, user_dic)
     }
   }
 

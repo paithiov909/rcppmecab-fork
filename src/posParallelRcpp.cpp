@@ -1,5 +1,5 @@
-// [[Rcpp::depends(BH, RcppParallel)]]
-
+// [[Rcpp::depends(cpp11, BH, RcppParallel)]]
+#define R_NO_REMAP
 #include <Rcpp.h>
 #include <RcppParallel.h>
 #include <boost/algorithm/string.hpp>
@@ -85,7 +85,7 @@ struct TextParseDF
           if (features.size() > 7) {
             parsed.push_back(features[7]);
           } else {
-            parsed.push_back("");
+            parsed.push_back("*");
           }
         }
       }
@@ -148,32 +148,38 @@ struct TextParse
   mecab_model_t* model_;
 };
 
+//' Call POS Tagger via `tbb::parallel_for` and return a named list.
+//'
+//' @param text Character vector.
+//' @param sys_dic String scalar.
+//' @param user_dic String scalar.
+//' @return named list.
+//'
 // [[Rcpp::interfaces(r, cpp)]]
 // [[Rcpp::export]]
-List posParallelJoinRcpp( std::vector<std::string> text, std::string sys_dic, std::string user_dic ) {
+List posParallelJoinRcpp(std::vector<std::string> text, std::string sys_dic, std::string user_dic) {
 
   std::vector< std::vector < std::string > > results(text.size());
   List result;
 
-  std::vector<std::string> args;
-  args.push_back("mecab");
+  std::string args = "";
   if (sys_dic != "") {
-    args.push_back("-d");
-    args.push_back(sys_dic);
+    args.append(" -d ");
+    args.append(sys_dic);
   }
   if (user_dic != "") {
-    args.push_back("-u");
-    args.push_back(user_dic);
+    args.append(" -u ");
+    args.append(user_dic);
   }
 
-  char** argv_model = new char*[args.size()];
-  for(size_t i = 0; i < args.size(); ++i) {
-    argv_model[i] = new char[args[i].size() + 1];
-    std::strcpy(argv_model[i], args[i].c_str());
-  }
+  // lattice model
+  mecab_model_t* model;
+  mecab_t* tagger;
+  mecab_lattice_t* lattice;
+  const mecab_node_t* node;
 
-  // Create MeCab model
-  mecab_model_t* model = mecab_model_new(args.size(), argv_model);
+  // create model
+  model = mecab_model_new2(args.c_str());
   if (!model) {
     Rcerr << "model is NULL" << std::endl;
     return R_NilValue;
@@ -184,18 +190,13 @@ List posParallelJoinRcpp( std::vector<std::string> text, std::string sys_dic, st
   auto func = TextParseJoin(&text, results, model);
   tbb::parallel_for(tbb::blocked_range<size_t>(0, text.size()), func);
 
-  for(size_t i = 0; i < args.size(); i++){
-    delete [] argv_model[i];
-  }
-  delete [] argv_model;
-
   mecab_model_destroy(model);
 
   // explicit type conversion
   for (size_t k = 0; k < results.size(); ++k) {
     CharacterVector resultString;
     for (size_t l = 0; l < results[k].size(); ++l) {
-      Rcpp::String morph_copy; // type conversion to Rcpp::String and set encoding
+      String morph_copy; // type conversion to Rcpp::String and set encoding
       morph_copy = results[k][l];
       morph_copy.set_encoding(CE_UTF8);
       resultString.push_back(morph_copy);
@@ -216,9 +217,16 @@ List posParallelJoinRcpp( std::vector<std::string> text, std::string sys_dic, st
   return result;
 }
 
+//' Call POS Tagger via `tbb::parallel_for` and return a data.frame
+//'
+//' @param text Character vector.
+//' @param sys_dic String scalar.
+//' @param user_dic String scalar.
+//' @return data.frame.
+//'
 // [[Rcpp::interfaces(r, cpp)]]
 // [[Rcpp::export]]
-DataFrame posParallelDFRcpp( StringVector text, std::string sys_dic, std::string user_dic ) {
+DataFrame posParallelDFRcpp(StringVector text, std::string sys_dic, std::string user_dic) {
 
   std::vector< std::vector < std::string > > results(text.size());
   std::vector< std::string > input = as<std::vector< std::string > >(text);
@@ -247,25 +255,24 @@ DataFrame posParallelDFRcpp( StringVector text, std::string sys_dic, std::string
     text_names = text.names();
   }
 
-  std::vector<std::string> args;
-  args.push_back("mecab");
+  std::string args = "";
   if (sys_dic != "") {
-    args.push_back("-d");
-    args.push_back(sys_dic);
+    args.append(" -d ");
+    args.append(sys_dic);
   }
   if (user_dic != "") {
-    args.push_back("-u");
-    args.push_back(user_dic);
+    args.append(" -u ");
+    args.append(user_dic);
   }
 
-  char** argv_model = new char*[args.size()];
-  for(size_t i = 0; i < args.size(); ++i) {
-    argv_model[i] = new char[args[i].size() + 1];
-    std::strcpy(argv_model[i], args[i].c_str());
-  }
+  // lattice model
+  mecab_model_t* model;
+  mecab_t* tagger;
+  mecab_lattice_t* lattice;
+  const mecab_node_t* node;
 
-  // Create MeCab model
-  mecab_model_t* model = mecab_model_new(args.size(), argv_model);
+  // create model
+  model = mecab_model_new2(args.c_str());
   if (!model) {
     Rcerr << "model is NULL" << std::endl;
     return R_NilValue;
@@ -275,11 +282,6 @@ DataFrame posParallelDFRcpp( StringVector text, std::string sys_dic, std::string
   // RcppParallel doesn't get CharacterVector as input and output
   auto func = TextParseDF(&input, results, model);
   tbb::parallel_for(tbb::blocked_range<size_t>(0, input.size()), func);
-
-  for(size_t i = 0; i < args.size(); i++){
-    delete [] argv_model[i];
-  }
-  delete [] argv_model;
 
   mecab_model_destroy(model);
 
@@ -291,13 +293,12 @@ DataFrame posParallelDFRcpp( StringVector text, std::string sys_dic, std::string
       subtype_t = results[k][l + 2];
       analytic_t = results[k][l + 3];
 
-      if (subtype_t == "*") {
-        subtype_t = "";
-      }
-
-      if (analytic_t == "*") {
-        analytic_t = "";
-      }
+      // if (subtype_t == "*") {
+      //   subtype_t = "";
+      // }
+      // if (analytic_t == "*") {
+      //   analytic_t = "";
+      // }
 
       token_t.set_encoding(CE_UTF8);
       pos_t.set_encoding(CE_UTF8);
@@ -334,9 +335,24 @@ DataFrame posParallelDFRcpp( StringVector text, std::string sys_dic, std::string
     doc_number++;
   }
 
-  return DataFrame::create(_["doc_id"]=doc_id, _["sentence_id"]=sentence_id, _["token_id"]=token_id, _["token"]=token, _["pos"]=pos, _["subtype"]=subtype, _["analytic"]=analytic);
+  return DataFrame::create(
+    _["doc_id"] = doc_id,
+    _["sentence_id"] = sentence_id,
+    _["token_id"] = token_id,
+    _["token"] = token,
+    _["pos"] = pos,
+    _["subtype"] = subtype,
+    _["analytic"] = analytic
+  );
 }
 
+//' Call POS Tagger via `tbb::parallel_for` and return a list of named character vectors.
+//'
+//' @param text Character vector.
+//' @param sys_dic String scalar.
+//' @param user_dic String scalar.
+//' @return list of named character vectors.
+//'
 // [[Rcpp::interfaces(r, cpp)]]
 // [[Rcpp::export]]
 List posParallelRcpp( std::vector<std::string> text, std::string sys_dic, std::string user_dic ) {
@@ -344,25 +360,24 @@ List posParallelRcpp( std::vector<std::string> text, std::string sys_dic, std::s
   std::vector< std::vector < std::string > > results(text.size());
   List result;
 
-  std::vector<std::string> args;
-  args.push_back("mecab");
+  std::string args = "";
   if (sys_dic != "") {
-    args.push_back("-d");
-    args.push_back(sys_dic);
+    args.append(" -d ");
+    args.append(sys_dic);
   }
   if (user_dic != "") {
-    args.push_back("-u");
-    args.push_back(user_dic);
+    args.append(" -u ");
+    args.append(user_dic);
   }
 
-  char** argv_model = new char*[args.size()];
-  for(size_t i = 0; i < args.size(); ++i) {
-    argv_model[i] = new char[args[i].size() + 1];
-    std::strcpy(argv_model[i], args[i].c_str());
-  }
+  // lattice model
+  mecab_model_t* model;
+  mecab_t* tagger;
+  mecab_lattice_t* lattice;
+  const mecab_node_t* node;
 
-  // Create MeCab model
-  mecab_model_t* model = mecab_model_new(args.size(), argv_model);
+  // create model
+  model = mecab_model_new2(args.c_str());
   if (!model) {
     Rcerr << "model is NULL" << std::endl;
     return R_NilValue;
@@ -373,11 +388,6 @@ List posParallelRcpp( std::vector<std::string> text, std::string sys_dic, std::s
   auto func = TextParse(&text, results, model);
   tbb::parallel_for(tbb::blocked_range<size_t>(0, text.size()), func);
 
-  for(size_t i = 0; i < args.size(); i++){
-    delete [] argv_model[i];
-  }
-  delete [] argv_model;
-
   mecab_model_destroy(model);
 
   // explicit type conversion
@@ -385,8 +395,8 @@ List posParallelRcpp( std::vector<std::string> text, std::string sys_dic, std::s
     CharacterVector resultString;
     CharacterVector resultTag;
     for (size_t l = 0; l < results[k].size(); l += 2) {
-      Rcpp::String morph_copy; // type conversion to Rcpp::String and set encoding
-      Rcpp::String tags_copy;
+      String morph_copy; // type conversion to Rcpp::String and set encoding
+      String tags_copy;
       morph_copy = results[k][l];
       tags_copy = results[k][l + 1];
       morph_copy.set_encoding(CE_UTF8);

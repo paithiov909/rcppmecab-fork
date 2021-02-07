@@ -24,12 +24,12 @@
 #' Basically, the function will return a list of character vectors with (morpheme)/(tag) elements.
 #'
 #' @param sentence A character vector of any length. For analyzing multiple sentences, put them in one character vector.
-#' @param join A bool to decide the output format. The default value is TRUE. If FALSE, the function will return morphemes only, and tags put in the attribute. if \code{format="data.frame"}, then this will be ignored.
+#' @param join A logical to decide the output format. The default value is TRUE. If FALSE, the function will return morphemes only, and tags put in the attribute. if \code{format="data.frame"}, then this will be ignored.
 #' @param format A data type for the result. The default value is "list". You can set this to "data.frame" to get a result as data frame format.
 #' @param sys_dic A location of system MeCab dictionary. The default value is "".
 #' @param user_dic A location of user-specific MeCab dictionary. The default value is "".
 #' @return A string vector of POS tagged morpheme will be returned in conjoined character
-#'  vecter form. Element name of the list are original phrases
+#'  vector form. Element name of the list are original phrases
 #'
 #' @examples
 #' \dontrun{
@@ -52,12 +52,16 @@ posParallel <- function(sentence, join = TRUE, format = c("list", "data.frame"),
     }
   }
 
-  format = match.arg(format)
-
   if (!is.null(getOption("mecabSysDic")) && !sys_dic == "") sys_dic = getOption("mecabSysDic")
+
+  sentence <- stringi::stri_enc_toutf8(sentence)
+  format <- match.arg(format)
+  sys_dic <- paste0(sys_dic, collapse = "")
+  user_dic <- paste0(user_dic, collapse = "")
 
   if (format == "data.frame") {
     result <- posParallelDFRcpp(sentence, sys_dic, user_dic)
+    result <- dplyr::mutate(result, dplyr::across(where(is.character), ~ dplyr::na_if(., "*")))
   } else {
     if (join == TRUE) {
       result <- posParallelJoinRcpp(sentence, sys_dic, user_dic)
