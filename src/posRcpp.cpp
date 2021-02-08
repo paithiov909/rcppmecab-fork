@@ -13,6 +13,10 @@ using namespace Rcpp;
 //' @param user_dic String scalar.
 //' @return list of named character vectors.
 //'
+//' @name posApplyRcpp
+//' @keywords internal
+//' @export
+//
 // [[Rcpp::interfaces(r, cpp)]]
 // [[Rcpp::export]]
 List posApplyRcpp(StringVector text, std::string sys_dic, std::string user_dic) {
@@ -107,6 +111,10 @@ List posApplyRcpp(StringVector text, std::string sys_dic, std::string user_dic) 
 //' @param user_dic String scalar.
 //' @return named list.
 //'
+//' @name posApplyJoinRcpp
+//' @keywords internal
+//' @export
+// 
 // [[Rcpp::interfaces(r, cpp)]]
 // [[Rcpp::export]]
 List posApplyJoinRcpp(StringVector text, std::string sys_dic, std::string user_dic) {
@@ -199,6 +207,10 @@ List posApplyJoinRcpp(StringVector text, std::string sys_dic, std::string user_d
 //' @param user_dic String scalar.
 //' @return list of data.frame.
 //'
+//' @name posApplyDFRcpp
+//' @keywords internal
+//' @export
+//
 // [[Rcpp::interfaces(r, cpp)]]
 // [[Rcpp::export]]
 List posApplyDFRcpp(StringVector text, std::string sys_dic, std::string user_dic) {
@@ -247,10 +259,10 @@ List posApplyDFRcpp(StringVector text, std::string sys_dic, std::string user_dic
       }
     }
 
-    return Rcpp::DataFrame::create(
-      Rcpp::Named("Surface") = surface,
-      Rcpp::Named("Feature") = feature
-    );;
+    return DataFrame::create(
+      Named("Surface") = surface,
+      Named("Feature") = feature
+    );
   };
 
   const List result = lapply(text, func);
@@ -270,6 +282,10 @@ List posApplyDFRcpp(StringVector text, std::string sys_dic, std::string user_dic
 //' @param user_dic String scalar.
 //' @return data.frame.
 //'
+//' @name posLoopDFRcpp
+//' @keywords internal
+//' @export
+//
 // [[Rcpp::interfaces(r, cpp)]]
 // [[Rcpp::export]]
 DataFrame posLoopDFRcpp(StringVector text, std::string sys_dic, std::string user_dic) {

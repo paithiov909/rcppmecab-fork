@@ -155,6 +155,10 @@ struct TextParse
 //' @param user_dic String scalar.
 //' @return named list.
 //'
+//' @name posParallelJoinRcpp
+//' @keywords internal
+//' @export
+//
 // [[Rcpp::interfaces(r, cpp)]]
 // [[Rcpp::export]]
 List posParallelJoinRcpp(std::vector<std::string> text, std::string sys_dic, std::string user_dic) {
@@ -174,9 +178,6 @@ List posParallelJoinRcpp(std::vector<std::string> text, std::string sys_dic, std
 
   // lattice model
   mecab_model_t* model;
-  mecab_t* tagger;
-  mecab_lattice_t* lattice;
-  const mecab_node_t* node;
 
   // create model
   model = mecab_model_new2(args.c_str());
@@ -224,6 +225,10 @@ List posParallelJoinRcpp(std::vector<std::string> text, std::string sys_dic, std
 //' @param user_dic String scalar.
 //' @return data.frame.
 //'
+//' @name posParallelDFRcpp
+//' @keywords internal
+//' @export
+//
 // [[Rcpp::interfaces(r, cpp)]]
 // [[Rcpp::export]]
 DataFrame posParallelDFRcpp(StringVector text, std::string sys_dic, std::string user_dic) {
@@ -267,9 +272,6 @@ DataFrame posParallelDFRcpp(StringVector text, std::string sys_dic, std::string 
 
   // lattice model
   mecab_model_t* model;
-  mecab_t* tagger;
-  mecab_lattice_t* lattice;
-  const mecab_node_t* node;
 
   // create model
   model = mecab_model_new2(args.c_str());
@@ -353,6 +355,10 @@ DataFrame posParallelDFRcpp(StringVector text, std::string sys_dic, std::string 
 //' @param user_dic String scalar.
 //' @return list of named character vectors.
 //'
+//' @name posParallelRcpp
+//' @keywords internal
+//' @export
+//
 // [[Rcpp::interfaces(r, cpp)]]
 // [[Rcpp::export]]
 List posParallelRcpp( std::vector<std::string> text, std::string sys_dic, std::string user_dic ) {
@@ -372,9 +378,6 @@ List posParallelRcpp( std::vector<std::string> text, std::string sys_dic, std::s
 
   // lattice model
   mecab_model_t* model;
-  mecab_t* tagger;
-  mecab_lattice_t* lattice;
-  const mecab_node_t* node;
 
   // create model
   model = mecab_model_new2(args.c_str());
