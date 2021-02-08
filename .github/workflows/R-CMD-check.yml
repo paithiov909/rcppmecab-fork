@@ -59,7 +59,7 @@ jobs:
       - name: Install MeCab for Korean (MacOS)
         if: ${{ matrix.platform == 'macos-latest' && matrix.mecab_lang == 'ko' }}
         run: |
-          brew install mecab
+          brew install mecab-ko
           brew install mecab-ko-dic
       - name: Install dependencies
         run: |
