@@ -114,7 +114,7 @@ List posApplyRcpp(StringVector text, std::string sys_dic, std::string user_dic) 
 //' @name posApplyJoinRcpp
 //' @keywords internal
 //' @export
-// 
+//
 // [[Rcpp::interfaces(r, cpp)]]
 // [[Rcpp::export]]
 List posApplyJoinRcpp(StringVector text, std::string sys_dic, std::string user_dic) {
@@ -260,8 +260,8 @@ List posApplyDFRcpp(StringVector text, std::string sys_dic, std::string user_dic
     }
 
     return DataFrame::create(
-      Named("Surface") = surface,
-      Named("Feature") = feature
+      Named("token") = surface,
+      Named("feature") = feature
     );
   };
 

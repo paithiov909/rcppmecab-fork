@@ -2,7 +2,7 @@
 % Please edit documentation in R/posSimple.R
 \name{posSimple}
 \alias{posSimple}
-\title{Yet another part-of-speech tagger}
+\title{yet another part-of-speech tagger}
 \usage{
 posSimple(
   sentence,
@@ -15,7 +15,7 @@ posSimple(
 \arguments{
 \item{sentence}{Character vector.}
 
-\item{into}{Character vector.}
+\item{into}{NULL or character vector. If not NULL, this argument is passed to \code{tidyr::separate}}
 
 \item{sys_dic}{A location of system MeCab dictionary. The default value is "".}
 
@@ -25,5 +25,16 @@ posSimple(
 data.frame
 }
 \description{
-Yet another part-of-speech tagger
+This function returns morphemes and their features as a simple data.frame.
+If only a character vector provided as `into`, the function separates every feature with `,`
+into the dictionary-specific format.
+It is useful when you want to check all features of morphemes filter, remove or count
+some morphemes by their features that are not available in output of \code{pos} and \code{posParallel}.
+}
+\examples{
+\dontrun{
+sentence <- c("some UTF-8 texts")
+posSimple(sentence)
+posSimple(sentence, into = NULL)
+}
 }

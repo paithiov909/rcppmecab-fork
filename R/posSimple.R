@@ -5,14 +5,26 @@ resetEncoding <- function(chr, encoding = "UTF-8") {
   return(chr)
 }
 
-#' Yet another part-of-speech tagger
+#' yet another part-of-speech tagger
+#'
+#' This function returns morphemes and their features as a simple data.frame.
+#' If only a character vector provided as `into`, the function separates every feature with `,`
+#' into the dictionary-specific format.
+#' It is useful when you want to check all features of morphemes filter, remove or count
+#' some morphemes by their features that are not available in output of \code{pos} and \code{posParallel}.
 #'
 #' @param sentence Character vector.
-#' @param into Character vector.
+#' @param into NULL or character vector. If not NULL, this argument is passed to \code{tidyr::separate}
 #' @param sys_dic A location of system MeCab dictionary. The default value is "".
 #' @param user_dic A location of user-specific MeCab dictionary. The default value is "".
 #' @return data.frame
 #'
+#' @examples
+#' \dontrun{
+#' sentence <- c("some UTF-8 texts")
+#' posSimple(sentence)
+#' posSimple(sentence, into = NULL)
+#' }
 #' @export
 posSimple <- function(sentence,
                       into = c(
@@ -36,23 +48,26 @@ posSimple <- function(sentence,
     }
   }
 
-  if (!is.null(getOption("mecabSysDic")) && !sys_dic == "") sys_dic = getOption("mecabSysDic")
+  if (!isBlank(getOption("mecabSysDic"))) sys_dic <- getOption("mecabSysDic")
 
   sentence <- stringi::stri_enc_toutf8(sentence)
   sys_dic <- paste0(sys_dic, collapse = "")
   user_dic <- paste0(user_dic, collapse = "")
 
-  result <- posApplyDFRcpp(sentence, sys_dic, user_dic)
-  result <- result %>%
-    purrr::imap_dfr(~ data.frame(sentence_id = .y, .x)) %>%
-    dplyr::mutate(dplyr::across(where(is.character), ~ resetEncoding(.))) %>%
-    tidyr::separate(
-      col = "Feature",
-      into = into,
-      sep = ",",
-      fill = "right"
-    ) %>%
-    dplyr::mutate(dplyr::across(where(is.character), ~ dplyr::na_if(., "*")))
+  result <- posApplyDFRcpp(sentence, sys_dic, user_dic) %>%
+    purrr::map(~ tibble::rowid_to_column(., "token_id")) %>%
+    purrr::imap_dfr(~ data.frame(doc_id = .y, .x)) %>%
+    dplyr::mutate(dplyr::across(where(is.character), ~ resetEncoding(.)))
+  if (!is.null(into)) {
+    result <- result %>%
+      tidyr::separate(
+        col = "feature",
+        into = into,
+        sep = ",",
+        fill = "right"
+      ) %>%
+      dplyr::mutate(dplyr::across(where(is.character), ~ dplyr::na_if(., "*")))
+  }
 
   return(result)
 }

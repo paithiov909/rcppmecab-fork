@@ -15,7 +15,7 @@ posParallel(
 \arguments{
 \item{sentence}{A character vector of any length. For analyzing multiple sentences, put them in one character vector.}
 
-\item{join}{A logical to decide the output format. The default value is TRUE. If FALSE, the function will return morphemes only, and tags put in the attribute. if \code{format="data.frame"}, then this will be ignored.}
+\item{join}{A logical to decide the output format. The default value is TRUE. If FALSE, the function will return morphemes only, and tags put in the attribute. if `format="data.frame"`, then this will be ignored.}
 
 \item{format}{A data type for the result. The default value is "list". You can set this to "data.frame" to get a result as data frame format.}
 
@@ -25,10 +25,10 @@ posParallel(
 }
 \value{
 A string vector of POS tagged morpheme will be returned in conjoined character
- vector form. Element name of the list are original phrases
+ vector form. Element names of the list are original phrases
 }
 \description{
-\code{posParallel} returns part-of-speech (POS) tagged morpheme of the sentence.
+\code{posParallel} returns part-of-speech (POS) tagged morphemes of the sentence.
 }
 \details{
 This is a parallelized version of MeCab part-of-speech tagger. The function gets a
@@ -40,21 +40,21 @@ Thus, this function makes duplicates of the input and the output.
 Therefore, if your data volume is large, use \code{pos} or divide the vector to
 several sub-vectors.
 
-You can add a user dictionary to \code{user_dic}. It should be compiled by
-\code{mecab-dict-index}. You can find an explanation about compiling a user
+You can add a user dictionary to `user_dic`. It should be compiled by
+`mecab-dict-index`. You can find an explanation about compiling a user
 dictionary in the \url{https://github.com/junhewk/RcppMeCab}.
 
 You can also set a system dictionary especially if you are using multiple
 dictionaries (for example, using both IPA and Juman dictionary at the same time in Japanese)
-in \code{sys_dic}. Using \code{options(mecabSysDic=)}, you can set your
+in `sys_dic`. Using \code{options(mecabSysDic="#the path to your system dictionary")}, you can set your
 preferred system dictionary to the R terminal.
 
-If you want to get a morpheme only, use \code{join = False} to put tag names on the attribute.
+If you want to get a morpheme only, use `join = FALSE` to put tag names on the attribute.
 Basically, the function will return a list of character vectors with (morpheme)/(tag) elements.
 }
 \examples{
 \dontrun{
-sentence <- c(#some UTF-8 texts)
+sentence <- c("some UTF-8 texts")
 posParallel(sentence)
 posParallel(sentence, join = FALSE)
 posParallel(sentence, format = "data.frame")

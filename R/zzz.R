@@ -8,6 +8,7 @@
 #' @import purrr
 #' @import stringr
 #' @importFrom stringi stri_enc_toutf8
+#' @importFrom tibble rowid_to_column
 #' @importFrom tidyr separate
 ## usethis namespace: end
 NULL

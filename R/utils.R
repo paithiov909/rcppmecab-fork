@@ -35,3 +35,26 @@ isBlank <- function(x, trim = TRUE, ...) {
 isDynAvailable <- function(dynlib = "libmecab") {
   return(!isBlank(Sys.which(paste0(dynlib, .Platform$dynlib.ext))))
 }
+
+#' Pack Output of POS Tagger
+#'
+#' @param df Output of \code{pos(format = "data.frame")}, \code{posParallel(format = "data.frame")} or \code{posSimple}.
+#' @param collapse This argument will be passed to \code{paste()}.
+#' @return data.frame
+#'
+#' @examples
+#' \dontrun{
+#' sentence <- c("some UTF-8 texts")
+#' result <- pos(sentence, format = "data.frame")
+#' pack(result)
+#' }
+#'
+#' @export
+pack <- function(df, collapse = " ") {
+  res <- df %>%
+    dplyr::group_by(doc_id) %>%
+    dplyr::group_map(~ paste(.x$token, collapse = collapse)) %>%
+    purrr::map_dfr(~ data.frame(text = .)) %>%
+    tibble::rowid_to_column("doc_id")
+  return(res)
+}
