@@ -23,6 +23,7 @@ Language: en-US
 LinkingTo:
     Rcpp,
     RcppParallel,
+    RcppThread,
     BH,
     cpp11
 Imports:
