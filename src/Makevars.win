@@ -22,7 +22,7 @@ endif
 CXX_STD = CXX11
 PKG_CPPFLAGS += -I../inst/include
 PKG_CXXFLAGS += -DRCPP_PARALLEL_USE_TBB=1 -DDLL_IMPORT -DSTRICT_R_HEADERS
-PKG_LIBS += -L$(MECAB_LIBS) $(shell "$(R_HOME)/bin$(R_ARCH_BIN)/Rscript.exe" -e "RcppParallel::RcppParallelLibs()") -lm -llibmecab
+PKG_LIBS += -L$(MECAB_LIBS) $(shell "$(R_HOME)/bin$(R_ARCH_BIN)/Rscript.exe" -e "RcppParallel::RcppParallelLibs()") -lm -lmecab
 
 all: libmecab $(SHLIB)
 
