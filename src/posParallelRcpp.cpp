@@ -190,7 +190,7 @@ List posParallelJoinRcpp(std::vector<std::string> text, std::string sys_dic, std
 
   // parallel argorithm with Intell TBB
   // RcppParallel doesn't get CharacterVector as input and output
-  auto func = TextParseJoin(&text, results, model);
+  TextParseJoin func = TextParseJoin(&text, results, model);
   tbb::parallel_for(tbb::blocked_range<size_t>(0, text.size()), func);
 
   mecab_model_destroy(model);
@@ -284,7 +284,7 @@ DataFrame posParallelDFRcpp(StringVector text, std::string sys_dic, std::string 
 
   // parallel argorithm with Intell TBB
   // RcppParallel doesn't get CharacterVector as input and output
-  auto func = TextParseDF(&input, results, model);
+  TextParseDF func = TextParseDF(&input, results, model);
   tbb::parallel_for(tbb::blocked_range<size_t>(0, input.size()), func);
 
   mecab_model_destroy(model);
@@ -390,7 +390,7 @@ List posParallelRcpp( std::vector<std::string> text, std::string sys_dic, std::s
 
   // parallel argorithm with Intell TBB
   // RcppParallel doesn't get CharacterVector as input and output
-  auto func = TextParse(&text, results, model);
+  TextParse func = TextParse(&text, results, model);
   tbb::parallel_for(tbb::blocked_range<size_t>(0, text.size()), func);
 
   mecab_model_destroy(model);
