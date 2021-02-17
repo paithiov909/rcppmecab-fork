@@ -91,7 +91,7 @@ List posApplyRcpp(StringVector text, std::string sys_dic, std::string user_dic) 
 
   StringVector result_name(text.size());
 
-  for (size_t h = 0; h < text.size(); ++h) {
+  for (R_len_t h = 0; h < text.size(); ++h) {
     String character_name = text[h];
     character_name.set_encoding(CE_UTF8);
     result_name[h] = character_name;
@@ -186,7 +186,7 @@ List posApplyJoinRcpp(StringVector text, std::string sys_dic, std::string user_d
 
   StringVector result_name(text.size());
 
-  for (size_t h = 0; h < text.size(); ++h) {
+  for (R_len_t h = 0; h < text.size(); ++h) {
     String character_name = text[h];
     character_name.set_encoding(CE_UTF8);
     result_name[h] = character_name;
@@ -249,6 +249,10 @@ List posApplyDFRcpp(StringVector text, std::string sys_dic, std::string user_dic
     node = mecab_lattice_get_bos_node(lattice);
 
     std::vector<std::string> surface, feature;
+
+    const size_t len = mecab_lattice_get_size(lattice);
+    surface.reserve(len);
+    feature.reserve(len);
 
     for (; node; node = node->next) {
       if (node->stat == MECAB_BOS_NODE)

@@ -28,7 +28,7 @@ A string vector of POS tagged morpheme will be returned in conjoined character
  vector form. Element names of the list are original phrases
 }
 \description{
-\code{pos} returns part-of-speech (POS) tagged morpheme of the sentence.
+\code{pos} returns part-of-speech (POS) tagged morphemes of the sentence.
 }
 \details{
 This is a basic function for MeCab part-of-speech tagger. The function gets a

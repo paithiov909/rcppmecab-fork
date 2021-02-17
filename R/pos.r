@@ -1,6 +1,6 @@
 #' part-of-speech tagger
 #'
-#' \code{pos} returns part-of-speech (POS) tagged morpheme of the sentence.
+#' \code{pos} returns part-of-speech (POS) tagged morphemes of the sentence.
 #'
 #' This is a basic function for MeCab part-of-speech tagger. The function gets a
 #' character vector of any length and runs a loop inside C++ to provide faster

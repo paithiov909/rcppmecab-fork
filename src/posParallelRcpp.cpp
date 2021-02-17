@@ -23,8 +23,13 @@ struct TextParseJoin
 
     for (size_t i = range.begin(); i < range.end(); ++i) {
       std::vector< std::string > parsed;
+
       mecab_lattice_set_sentence(lattice, (*sentences_)[i].c_str());
       mecab_parse_lattice(tagger, lattice);
+
+      const size_t len = mecab_lattice_get_size(lattice);
+      parsed.reserve(len);
+
       node = mecab_lattice_get_bos_node(lattice);
 
       for (; node; node = node->next) {
@@ -69,6 +74,10 @@ struct TextParseDF
 
       mecab_lattice_set_sentence(lattice, (*sentences_)[i].c_str());
       mecab_parse_lattice(tagger, lattice);
+
+      const size_t len = mecab_lattice_get_size(lattice);
+      parsed.reserve(len);
+
       node = mecab_lattice_get_bos_node(lattice);
 
       for (; node; node = node->next) {
@@ -121,6 +130,10 @@ struct TextParse
 
       mecab_lattice_set_sentence(lattice, (*sentences_)[i].c_str());
       mecab_parse_lattice(tagger, lattice);
+
+      const size_t len = mecab_lattice_get_size(lattice);
+      parsed.reserve(len);
+
       node = mecab_lattice_get_bos_node(lattice);
 
       for (; node; node = node->next) {

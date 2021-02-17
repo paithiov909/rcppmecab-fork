@@ -4,13 +4,7 @@
 \alias{posSimple}
 \title{yet another part-of-speech tagger}
 \usage{
-posSimple(
-  sentence,
-  into = c("POS1", "POS2", "POS3", "POS4", "X5StageUse1", "X5StageUse2", "Original",
-    "Yomi1", "Yomi2"),
-  sys_dic = "",
-  user_dic = ""
-)
+posSimple(sentence, into = NULL, sys_dic = "", user_dic = "")
 }
 \arguments{
 \item{sentence}{Character vector.}
@@ -25,16 +19,21 @@ posSimple(
 data.frame
 }
 \description{
+\code{posSimple} returns part-of-speech (POS) tagged morphemes of the sentence as a simple data.frame.
+}
+\details{
 This function returns morphemes and their features as a simple data.frame.
 If only a character vector provided as `into`, the function separates every feature with `,`
 into the dictionary-specific format.
-It is useful when you want to check all features of morphemes filter, remove or count
+
+It is useful when you want to check all features of morphemes and then filter, remove or count
 some morphemes by their features that are not available in output of \code{pos} and \code{posParallel}.
 }
 \examples{
 \dontrun{
 sentence <- c("some UTF-8 texts")
 posSimple(sentence)
-posSimple(sentence, into = NULL)
+# Parse features of Japanese IPA dictionary.
+posSimple(sentence, into = c("POS1", "POS2", "POS3", "POS4", "X5StageUse1", "X5StageUse2", "Original", "Yomi1", "Yomi2"))
 }
 }
