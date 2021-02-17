@@ -76,7 +76,7 @@ struct TextParseDF
       mecab_parse_lattice(tagger, lattice);
 
       const size_t len = mecab_lattice_get_size(lattice);
-      parsed.reserve(len);
+      parsed.reserve(len*4);
 
       node = mecab_lattice_get_bos_node(lattice);
 
@@ -132,7 +132,7 @@ struct TextParse
       mecab_parse_lattice(tagger, lattice);
 
       const size_t len = mecab_lattice_get_size(lattice);
-      parsed.reserve(len);
+      parsed.reserve(len*2);
 
       node = mecab_lattice_get_bos_node(lattice);
 
