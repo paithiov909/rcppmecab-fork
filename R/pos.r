@@ -49,7 +49,7 @@ pos <- function(sentence, join = TRUE, format = c("list", "data.frame"), sys_dic
 
   if (!isBlank(getOption("mecabSysDic"))) sys_dic <- getOption("mecabSysDic")
 
-  sentence <- stringi::stri_enc_toutf8(sentence)
+  sentence <- purrr::set_names(stringi::stri_enc_toutf8(sentence), names(sentence))
   format <- match.arg(format)
   sys_dic <- paste0(sys_dic, collapse = "")
   user_dic <- paste0(user_dic, collapse = "")

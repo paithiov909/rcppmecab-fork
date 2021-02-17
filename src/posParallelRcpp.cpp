@@ -269,7 +269,7 @@ DataFrame posParallelDFRcpp(StringVector text, std::string sys_dic, std::string 
   int sentence_number = 1;
   int token_number = 1;
   StringVector text_names;
-  bool b = text.hasAttribute("name");
+  bool b = text.hasAttribute("names");
 
   if (b == TRUE) {
     text_names = text.names();

@@ -343,7 +343,7 @@ DataFrame posLoopDFRcpp(StringVector text, std::string sys_dic, std::string user
   int token_number = 1;
 
   StringVector text_names;
-  bool b = text.hasAttribute("name");
+  bool b = text.hasAttribute("names");
   if (b == TRUE) {
     text_names = text.names();
   }
