@@ -4,12 +4,14 @@
 \alias{pack}
 \title{Pack Output of POS Tagger}
 \usage{
-pack(df, collapse = " ")
+pack(df, pull = "token", .collapse = " ")
 }
 \arguments{
 \item{df}{Output of \code{pos(format = "data.frame")}, \code{posParallel(format = "data.frame")} or \code{posSimple}.}
 
-\item{collapse}{This argument will be passed to \code{paste()}.}
+\item{pull}{Column name to be packed into data.frame. Default value is `token`.}
+
+\item{.collapse}{This argument will be passed to \code{paste()}.}
 }
 \value{
 data.frame
