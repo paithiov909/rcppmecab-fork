@@ -251,7 +251,7 @@ DataFrame posParallelDFRcpp(StringVector text, std::string sys_dic, std::string 
   std::vector< std::vector < std::string > > results(text.size());
   std::vector< std::string > input = as<std::vector< std::string > >(text);
 
-  StringVector doc_id;
+  IntegerVector doc_id;
   IntegerVector sentence_id;
   IntegerVector token_id;
   StringVector token;
@@ -259,7 +259,6 @@ DataFrame posParallelDFRcpp(StringVector text, std::string sys_dic, std::string 
   StringVector subtype;
   StringVector analytic;
 
-  String doc_id_t;
   String token_t;
   String pos_t;
   String subtype_t;
@@ -269,11 +268,6 @@ DataFrame posParallelDFRcpp(StringVector text, std::string sys_dic, std::string 
   int sentence_number = 1;
   int token_number = 1;
   StringVector text_names;
-  bool b = text.hasAttribute("names");
-
-  if (b == TRUE) {
-    text_names = text.names();
-  }
 
   std::string args = "";
   if (sys_dic != "") {
@@ -338,13 +332,7 @@ DataFrame posParallelDFRcpp(StringVector text, std::string sys_dic, std::string 
       }
 
       // append doc_id
-      if (b == TRUE) {
-        doc_id_t = text_names[doc_number];
-        doc_id_t.set_encoding(CE_UTF8);
-        doc_id.push_back(doc_id_t);
-      } else {
-        doc_id.push_back(std::to_string(doc_number + 1));
-      }
+      doc_id.push_back(doc_number + 1);
 
     }
     sentence_number = 1;
@@ -359,8 +347,8 @@ DataFrame posParallelDFRcpp(StringVector text, std::string sys_dic, std::string 
     _["token"] = token,
     _["pos"] = pos,
     _["subtype"] = subtype,
-    _["analytic"] = analytic
-  );
+    _["analytic"] = analytic,
+    _["stringsAsFactors"] = false);
 }
 
 //' Call POS Tagger via `tbb::parallel_for` and return a list of named character vectors.

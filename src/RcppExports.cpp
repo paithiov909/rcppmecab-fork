@@ -262,7 +262,7 @@ RcppExport SEXP _RcppMeCab_posLoopDFRcpp(SEXP textSEXP, SEXP sys_dicSEXP, SEXP u
 }
 
 // validate (ensure exported C++ functions exist before calling them)
-static int _RcppMeCab_RcppExport_validate(const char* sig) { 
+static int _RcppMeCab_RcppExport_validate(const char* sig) {
     static std::set<std::string> signatures;
     if (signatures.empty()) {
         signatures.insert("List(*posParallelJoinRcpp)(std::vector<std::string>,std::string,std::string)");
@@ -277,7 +277,7 @@ static int _RcppMeCab_RcppExport_validate(const char* sig) {
 }
 
 // registerCCallable (register entry points for exported C++ functions)
-RcppExport SEXP _RcppMeCab_RcppExport_registerCCallable() { 
+RcppExport SEXP _RcppMeCab_RcppExport_registerCCallable() {
     R_RegisterCCallable("RcppMeCab", "_RcppMeCab_posParallelJoinRcpp", (DL_FUNC)_RcppMeCab_posParallelJoinRcpp_try);
     R_RegisterCCallable("RcppMeCab", "_RcppMeCab_posParallelDFRcpp", (DL_FUNC)_RcppMeCab_posParallelDFRcpp_try);
     R_RegisterCCallable("RcppMeCab", "_RcppMeCab_posParallelRcpp", (DL_FUNC)_RcppMeCab_posParallelRcpp_try);
@@ -287,6 +287,45 @@ RcppExport SEXP _RcppMeCab_RcppExport_registerCCallable() {
     R_RegisterCCallable("RcppMeCab", "_RcppMeCab_posLoopDFRcpp", (DL_FUNC)_RcppMeCab_posLoopDFRcpp_try);
     R_RegisterCCallable("RcppMeCab", "_RcppMeCab_RcppExport_validate", (DL_FUNC)_RcppMeCab_RcppExport_validate);
     return R_NilValue;
+}
+// posLoopRcpp
+List posLoopRcpp(std::vector< std::string > text, std::string sys_dic, std::string user_dic);
+RcppExport SEXP _RcppMeCab_posLoopRcpp(SEXP textSEXP, SEXP sys_dicSEXP, SEXP user_dicSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< std::vector< std::string > >::type text(textSEXP);
+    Rcpp::traits::input_parameter< std::string >::type sys_dic(sys_dicSEXP);
+    Rcpp::traits::input_parameter< std::string >::type user_dic(user_dicSEXP);
+    rcpp_result_gen = Rcpp::wrap(posLoopRcpp(text, sys_dic, user_dic));
+    return rcpp_result_gen;
+END_RCPP
+}
+// posLoopJoinRcpp
+List posLoopJoinRcpp(std::vector< std::string > text, std::string sys_dic, std::string user_dic);
+RcppExport SEXP _RcppMeCab_posLoopJoinRcpp(SEXP textSEXP, SEXP sys_dicSEXP, SEXP user_dicSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< std::vector< std::string > >::type text(textSEXP);
+    Rcpp::traits::input_parameter< std::string >::type sys_dic(sys_dicSEXP);
+    Rcpp::traits::input_parameter< std::string >::type user_dic(user_dicSEXP);
+    rcpp_result_gen = Rcpp::wrap(posLoopJoinRcpp(text, sys_dic, user_dic));
+    return rcpp_result_gen;
+END_RCPP
+}
+// posDFRcpp
+DataFrame posDFRcpp(StringVector text, std::string sys_dic, std::string user_dic);
+RcppExport SEXP _RcppMeCab_posDFRcpp(SEXP textSEXP, SEXP sys_dicSEXP, SEXP user_dicSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< StringVector >::type text(textSEXP);
+    Rcpp::traits::input_parameter< std::string >::type sys_dic(sys_dicSEXP);
+    Rcpp::traits::input_parameter< std::string >::type user_dic(user_dicSEXP);
+    rcpp_result_gen = Rcpp::wrap(posDFRcpp(text, sys_dic, user_dic));
+    return rcpp_result_gen;
+END_RCPP
 }
 
 static const R_CallMethodDef CallEntries[] = {

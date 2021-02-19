@@ -38,6 +38,7 @@
 #' }
 #'
 #' @export
+#' @useDynLib
 pos <- function(sentence, join = TRUE, format = c("list", "data.frame"), sys_dic = "", user_dic = "") {
   if (typeof(sentence) != "character") {
     if (typeof(sentence) == "factor") {
@@ -57,6 +58,11 @@ pos <- function(sentence, join = TRUE, format = c("list", "data.frame"), sys_dic
   if (format == "data.frame") {
     result <- posLoopDFRcpp(sentence, sys_dic, user_dic)
     result <- dplyr::mutate(result, dplyr::across(where(is.character), ~ dplyr::na_if(., "*")))
+    result$doc_id <- factor(
+      result$doc_id,
+      levels = seq_along(sentence),
+      labels = names(sentence)
+    )
   } else {
     if (join == TRUE) {
       result <- posApplyJoinRcpp(sentence, sys_dic, user_dic)

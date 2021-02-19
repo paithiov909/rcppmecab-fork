@@ -9,7 +9,7 @@ Authors@R: c(person("Junhewk", "Kim", role = c("aut", "cre"),
 Author: Junhewk Kim [aut, cre],
     Taku Kudo [aut]
 Maintainer: Junhewk Kim <junhewk.kim@gmail.com>
-Description: R package based on 'Rcpp' for 'MeCab': Yet Another Part-of-Speech and Morphological Analyzer. 
+Description: R package based on 'Rcpp' for 'MeCab': Yet Another Part-of-Speech and Morphological Analyzer.
     The purpose of this package is providing a seamless developing and analyzing environment for CJK texts.
     This package utilizes parallel programming for providing highly efficient text preprocessing 'posParallel()' function.
     For installation, please refer to README.md file.
@@ -35,7 +35,7 @@ Imports:
     stringr,
     tibble,
     tidyr
-Suggests: 
+Suggests:
     testthat,
     spelling
 SystemRequirements:
