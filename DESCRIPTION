@@ -24,8 +24,7 @@ LinkingTo:
     Rcpp,
     RcppParallel,
     RcppThread,
-    BH,
-    cpp11
+    BH
 Imports:
     Rcpp,
     RcppParallel,

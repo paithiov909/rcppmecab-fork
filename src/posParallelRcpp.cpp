@@ -1,8 +1,11 @@
 // [[Rcpp::plugins(cpp11)]]
-// [[Rcpp::depends(RcppThread, BH, RcppParallel)]]
+// [[Rcpp::depends(RcppThread, RcppParallel, BH)]]
+
 #define R_NO_REMAP
 #define RCPPTHREAD_OVERRIDE_THREAD 1
+
 #include <Rcpp.h>
+#include <RcppThread.h>
 #include <RcppParallel.h>
 #include <boost/algorithm/string.hpp>
 #include "../inst/include/mecab.h"
