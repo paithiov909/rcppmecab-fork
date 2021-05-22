@@ -188,42 +188,6 @@ RcppExport SEXP _RcppMeCab_posApplyJoinRcpp(SEXP textSEXP, SEXP sys_dicSEXP, SEX
     UNPROTECT(1);
     return rcpp_result_gen;
 }
-// posApplyDFRcpp
-List posApplyDFRcpp(StringVector text, std::string sys_dic, std::string user_dic);
-static SEXP _RcppMeCab_posApplyDFRcpp_try(SEXP textSEXP, SEXP sys_dicSEXP, SEXP user_dicSEXP) {
-BEGIN_RCPP
-    Rcpp::RObject rcpp_result_gen;
-    Rcpp::traits::input_parameter< StringVector >::type text(textSEXP);
-    Rcpp::traits::input_parameter< std::string >::type sys_dic(sys_dicSEXP);
-    Rcpp::traits::input_parameter< std::string >::type user_dic(user_dicSEXP);
-    rcpp_result_gen = Rcpp::wrap(posApplyDFRcpp(text, sys_dic, user_dic));
-    return rcpp_result_gen;
-END_RCPP_RETURN_ERROR
-}
-RcppExport SEXP _RcppMeCab_posApplyDFRcpp(SEXP textSEXP, SEXP sys_dicSEXP, SEXP user_dicSEXP) {
-    SEXP rcpp_result_gen;
-    {
-        Rcpp::RNGScope rcpp_rngScope_gen;
-        rcpp_result_gen = PROTECT(_RcppMeCab_posApplyDFRcpp_try(textSEXP, sys_dicSEXP, user_dicSEXP));
-    }
-    Rboolean rcpp_isInterrupt_gen = Rf_inherits(rcpp_result_gen, "interrupted-error");
-    if (rcpp_isInterrupt_gen) {
-        UNPROTECT(1);
-        Rf_onintr();
-    }
-    bool rcpp_isLongjump_gen = Rcpp::internal::isLongjumpSentinel(rcpp_result_gen);
-    if (rcpp_isLongjump_gen) {
-        Rcpp::internal::resumeJump(rcpp_result_gen);
-    }
-    Rboolean rcpp_isError_gen = Rf_inherits(rcpp_result_gen, "try-error");
-    if (rcpp_isError_gen) {
-        SEXP rcpp_msgSEXP_gen = Rf_asChar(rcpp_result_gen);
-        UNPROTECT(1);
-        Rf_error(CHAR(rcpp_msgSEXP_gen));
-    }
-    UNPROTECT(1);
-    return rcpp_result_gen;
-}
 // posLoopDFRcpp
 DataFrame posLoopDFRcpp(StringVector text, std::string sys_dic, std::string user_dic);
 static SEXP _RcppMeCab_posLoopDFRcpp_try(SEXP textSEXP, SEXP sys_dicSEXP, SEXP user_dicSEXP) {
@@ -270,7 +234,6 @@ static int _RcppMeCab_RcppExport_validate(const char* sig) {
         signatures.insert("List(*posParallelRcpp)(std::vector<std::string>,std::string,std::string)");
         signatures.insert("List(*posApplyRcpp)(StringVector,std::string,std::string)");
         signatures.insert("List(*posApplyJoinRcpp)(StringVector,std::string,std::string)");
-        signatures.insert("List(*posApplyDFRcpp)(StringVector,std::string,std::string)");
         signatures.insert("DataFrame(*posLoopDFRcpp)(StringVector,std::string,std::string)");
     }
     return signatures.find(sig) != signatures.end();
@@ -283,7 +246,6 @@ RcppExport SEXP _RcppMeCab_RcppExport_registerCCallable() {
     R_RegisterCCallable("RcppMeCab", "_RcppMeCab_posParallelRcpp", (DL_FUNC)_RcppMeCab_posParallelRcpp_try);
     R_RegisterCCallable("RcppMeCab", "_RcppMeCab_posApplyRcpp", (DL_FUNC)_RcppMeCab_posApplyRcpp_try);
     R_RegisterCCallable("RcppMeCab", "_RcppMeCab_posApplyJoinRcpp", (DL_FUNC)_RcppMeCab_posApplyJoinRcpp_try);
-    R_RegisterCCallable("RcppMeCab", "_RcppMeCab_posApplyDFRcpp", (DL_FUNC)_RcppMeCab_posApplyDFRcpp_try);
     R_RegisterCCallable("RcppMeCab", "_RcppMeCab_posLoopDFRcpp", (DL_FUNC)_RcppMeCab_posLoopDFRcpp_try);
     R_RegisterCCallable("RcppMeCab", "_RcppMeCab_RcppExport_validate", (DL_FUNC)_RcppMeCab_RcppExport_validate);
     return R_NilValue;
@@ -295,7 +257,6 @@ static const R_CallMethodDef CallEntries[] = {
     {"_RcppMeCab_posParallelRcpp", (DL_FUNC) &_RcppMeCab_posParallelRcpp, 3},
     {"_RcppMeCab_posApplyRcpp", (DL_FUNC) &_RcppMeCab_posApplyRcpp, 3},
     {"_RcppMeCab_posApplyJoinRcpp", (DL_FUNC) &_RcppMeCab_posApplyJoinRcpp, 3},
-    {"_RcppMeCab_posApplyDFRcpp", (DL_FUNC) &_RcppMeCab_posApplyDFRcpp, 3},
     {"_RcppMeCab_posLoopDFRcpp", (DL_FUNC) &_RcppMeCab_posLoopDFRcpp, 3},
     {"_RcppMeCab_RcppExport_registerCCallable", (DL_FUNC) &_RcppMeCab_RcppExport_registerCCallable, 0},
     {NULL, NULL, 0}

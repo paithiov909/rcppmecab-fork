@@ -6,10 +6,8 @@
 ## --------------------------------------- ##
 #' @import dplyr
 #' @import purrr
-#' @import stringr
 #' @importFrom stringi stri_enc_toutf8
-#' @importFrom tibble rowid_to_column
-#' @importFrom tidyr separate
+#' @importFrom stringr str_trim str_c
 ## usethis namespace: end
 NULL
 

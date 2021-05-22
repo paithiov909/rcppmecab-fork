@@ -73,18 +73,6 @@ NULL
 #' @export
 NULL
 
-#' Call POS Tagger via `lapply` and return a list of data.frame
-#'
-#' @param text Character vector.
-#' @param sys_dic String scalar.
-#' @param user_dic String scalar.
-#' @return list of data.frame.
-#'
-#' @name posApplyDFRcpp
-#' @keywords internal
-#' @export
-NULL
-
 #' Call POS Tagger via loop and return a data.frame
 #'
 #' @param text Character vector.
@@ -103,10 +91,6 @@ posApplyRcpp <- function(text, sys_dic, user_dic) {
 
 posApplyJoinRcpp <- function(text, sys_dic, user_dic) {
     .Call(`_RcppMeCab_posApplyJoinRcpp`, text, sys_dic, user_dic)
-}
-
-posApplyDFRcpp <- function(text, sys_dic, user_dic) {
-    .Call(`_RcppMeCab_posApplyDFRcpp`, text, sys_dic, user_dic)
 }
 
 posLoopDFRcpp <- function(text, sys_dic, user_dic) {

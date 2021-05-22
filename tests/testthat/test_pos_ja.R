@@ -34,7 +34,7 @@ test_that("Test if pos fails", {
   skip_if(.Platform$OS.type == "windows", "OS.type is windows. Skip testing.")
   skip_if_not(isDynAvailable(), "No libmecab available. Skip testing.")
   skip_if_not(Sys.getenv("MECAB_LANG") == "ja", "MECAB_LANG is not ja. Skip testing.")
-  ## posSimple()
+  ## pos()
   expect_error(pos(list()))
   expect_error(pos(factor()))
 })

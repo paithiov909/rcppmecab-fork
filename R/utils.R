@@ -40,7 +40,7 @@ isDynAvailable <- function(dynlib = "libmecab") {
 #'
 #' @param df Output of \code{pos(format = "data.frame")}, \code{posParallel(format = "data.frame")} or \code{posSimple}.
 #' @param pull Column name to be packed into data.frame. Default value is `token`.
-#' @param .collapse This argument will be passed to \code{paste()}.
+#' @param .collapse This argument will be passed to \code{stringr::str_c()}.
 #' @return data.frame
 #'
 #' @examples
@@ -56,8 +56,8 @@ pack <- function(df, pull = "token", .collapse = " ") {
     dplyr::group_by(doc_id) %>%
     dplyr::group_map(
       ~ dplyr::pull(.x, {{ pull }}) %>%
-        stringr::str_c(collapse = .collapse)) %>%
-    purrr::map_dfr(~ data.frame(text = .)) %>%
-    tibble::rowid_to_column("doc_id")
+        stringr::str_c(collapse = .collapse)
+    ) %>%
+    purrr::imap_dfr(~ data.frame(doc_id = .y, text = .x))
   return(res)
 }
