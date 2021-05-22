@@ -38,7 +38,7 @@ isDynAvailable <- function(dynlib = "libmecab") {
 
 #' Pack Output of POS Tagger
 #'
-#' @param df Output of \code{pos(format = "data.frame")}, \code{posParallel(format = "data.frame")} or \code{posSimple}.
+#' @param df Output of \code{pos(format = "data.frame")} or \code{posParallel(format = "data.frame")}.
 #' @param pull Column name to be packed into data.frame. Default value is `token`.
 #' @param .collapse This argument will be passed to \code{stringr::str_c()}.
 #' @return data.frame

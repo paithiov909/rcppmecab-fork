@@ -7,7 +7,7 @@
 pack(df, pull = "token", .collapse = " ")
 }
 \arguments{
-\item{df}{Output of \code{pos(format = "data.frame")}, \code{posParallel(format = "data.frame")} or \code{posSimple}.}
+\item{df}{Output of \code{pos(format = "data.frame")} or \code{posParallel(format = "data.frame")}.}
 
 \item{pull}{Column name to be packed into data.frame. Default value is `token`.}
 
