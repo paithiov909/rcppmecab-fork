@@ -2,16 +2,13 @@
 % Please edit documentation in R/utils.R
 \name{isDynAvailable}
 \alias{isDynAvailable}
-\title{Check if dynamic libraries are available}
+\title{Check if mecab is available}
 \usage{
-isDynAvailable(dynlib = "libmecab")
-}
-\arguments{
-\item{dynlib}{The names of dynamic libraries to check their accessibility. Default value is `libmecab`.}
+isDynAvailable()
 }
 \value{
 Logical.
 }
 \description{
-Check if dynamic libraries are available
+Check if mecab is available
 }

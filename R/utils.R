@@ -15,7 +15,7 @@ isBlank <- function(x, trim = TRUE, ...) {
     dplyr::case_when(
       is.na(x) ~ TRUE,
       is.nan(x) ~ TRUE,
-      is.character(x) && nchar(ifelse(trim, stringr::str_trim(x), x)) == 0 ~ TRUE,
+      is.character(x) && nchar(ifelse(trim, stringi::stri_trim(x), x)) == 0 ~ TRUE,
       TRUE ~ FALSE
     )
   } else {
@@ -26,21 +26,24 @@ isBlank <- function(x, trim = TRUE, ...) {
   }
 }
 
-#' Check if dynamic libraries are available
+#' Check if mecab is available
 #'
-#' @param dynlib The names of dynamic libraries to check their accessibility. Default value is `libmecab`.
 #' @return Logical.
 #'
 #' @export
-isDynAvailable <- function(dynlib = "libmecab") {
-  return(!isBlank(Sys.which(paste0(dynlib, .Platform$dynlib.ext))))
+isDynAvailable <- function() {
+  if (.Platform$OS.type == "windows") {
+    return(!isBlank(Sys.which(paste0("libmecab", .Platform$dynlib.ext))))
+  } else {
+    return(!isBlank(Sys.which(paste0("mecab"))))
+  }
 }
 
 #' Pack Output of POS Tagger
 #'
 #' @param df Output of \code{pos(format = "data.frame")} or \code{posParallel(format = "data.frame")}.
 #' @param pull Column name to be packed into data.frame. Default value is `token`.
-#' @param .collapse This argument will be passed to \code{stringr::str_c()}.
+#' @param .collapse This argument will be passed to \code{stringi::stri_c()}.
 #' @return data.frame
 #'
 #' @examples
@@ -56,7 +59,7 @@ pack <- function(df, pull = "token", .collapse = " ") {
     dplyr::group_by(doc_id) %>%
     dplyr::group_map(
       ~ dplyr::pull(.x, {{ pull }}) %>%
-        stringr::str_c(collapse = .collapse)
+        stringi::stri_c(collapse = .collapse)
     ) %>%
     purrr::imap_dfr(~ data.frame(doc_id = .y, text = .x))
   return(res)

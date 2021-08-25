@@ -11,7 +11,7 @@ pack(df, pull = "token", .collapse = " ")
 
 \item{pull}{Column name to be packed into data.frame. Default value is `token`.}
 
-\item{.collapse}{This argument will be passed to \code{stringr::str_c()}.}
+\item{.collapse}{This argument will be passed to \code{stringi::stri_c()}.}
 }
 \value{
 data.frame
