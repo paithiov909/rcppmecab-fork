@@ -9,31 +9,42 @@
 ##  Based on Makefile.win of Rblpapi
 ##  https://github.com/Rblp/Rblpapi/blob/master/src/Makevars.win
 
-ifeq "$(MECAB_LIBS)" ""
-	MECAB_LIBS = ../inst/libs$(R_ARCH)
-endif
-
 ## Confirm there is a user definition of an environment variable MECAB_LANG
 ifneq "$(MECAB_LANG)" "ja"
 	MECAB_LANG = ko
 endif
 
+## Confirm the environment variable that defining where the 'libmecab.dll' is placed.
+## i.e. if you using the Korean mecab, MECAB_LIBS goes to '/mecab' (by default),
+## or (if you using the Japanese mecab), MECAB_LIBS goes to somewhere like '/PROGRA~2/mecab/bin'.
+##
+## Note that the MeCab library built for Windows does not have compatibility
+## with both R for 64bit arch and R for 32bit arch.
+## Because of this, if you build and install RcppMeCab from source package,
+## you would ensure to use some build options like that '--no-multiarch'.
+ifeq "$(MECAB_LIBS)" ""
+	MECAB_LIBS = /mecab
+endif
+
 ## Compiler / linker flags with RcppParallel library
+## -----
+## Drop '-Wno-parentheses' from PKG_CXXFLAGS for portability (2021-08-26).
 CXX_STD = CXX11
 PKG_CPPFLAGS += -I../inst/include -DBOOST_NO_AUTO_PTR
-PKG_CXXFLAGS += -DRCPP_PARALLEL_USE_TBB=1 -DDLL_IMPORT -DSTRICT_R_HEADERS -Wno-parentheses
+PKG_CXXFLAGS += -DRCPP_PARALLEL_USE_TBB=1 -DDLL_IMPORT -DSTRICT_R_HEADERS
 PKG_LIBS += -L$(MECAB_LIBS) $(shell "$(R_HOME)/bin$(R_ARCH_BIN)/Rscript.exe" -e "RcppParallel::RcppParallelLibs()") -lm -llibmecab
 
 all: libmecab $(SHLIB)
 
+## Ensure the build succeed even if there is no 'libmecab.dll'.
+## -----
 ## target to ensure tar.gz files get unpacked
 ## the opening '@' ensures operations are executed 'quietly'
 ## in order to see commands as they happens add a 'v' to the tar and cp commands
+## -----
+## Note that using RcppMeCab still requires system dictionaries properly installed.
 libmecab:
-	@if [ ! -d ../mecab/win$(R_ARCH) ]; then mkdir -p ../mecab/win$(R_ARCH); fi
-	@if [ ! -f ../mecab/win$(R_ARCH)/mecab$(WIN)_$(MECAB_LANG).tar.gz ]; then `"$(R_HOME)/bin$(R_ARCH_BIN)/Rscript.exe" -e "download.file(url='https://raw.githack.com/junhewk/RcppMeCab/master/mecab/win$(R_ARCH)/mecab$(WIN)_$(MECAB_LANG).tar.gz', destfile='../mecab/win$(R_ARCH)/mecab$(WIN)_$(MECAB_LANG).tar.gz', quiet=TRUE)"`; fi
-	@tar xfz ../mecab/win$(R_ARCH)/mecab$(WIN)_$(MECAB_LANG).tar.gz
-	@if [ ! -d ../inst/libs$(R_ARCH) ]; then mkdir -p ../inst/libs$(R_ARCH); fi
-	@cp libmecab$(SHLIB_EXT) ../inst/libs$(R_ARCH)
+	@tar xfz ../tools/mecab/win$(R_ARCH)/mecab$(WIN)_$(MECAB_LANG).tar.gz
+	@if [ ! -d $(MECAB_LIBS) ]; then mkdir -p $(MECAB_LIBS); fi
+	@if [ ! -f $(MECAB_LIBS)/libmecab$(SHLIB_EXT) ]; then cp libmecab$(SHLIB_EXT) $(MECAB_LIBS); fi
 	@rm libmecab$(SHLIB_EXT)
-

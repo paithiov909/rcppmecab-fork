@@ -2,7 +2,7 @@
 % Please edit documentation in R/utils.R
 \name{isDynAvailable}
 \alias{isDynAvailable}
-\title{Check if mecab is available}
+\title{Check if mecab or its dynamic libarary is available}
 \usage{
 isDynAvailable()
 }
@@ -10,5 +10,5 @@ isDynAvailable()
 Logical.
 }
 \description{
-Check if mecab is available
+Check if mecab or its dynamic libarary is available
 }

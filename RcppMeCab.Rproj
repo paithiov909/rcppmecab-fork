@@ -21,4 +21,3 @@ PackageInstallArgs: --no-multiarch
 PackageRoxygenize: rd,collate,namespace
 
 QuitChildProcessesOnExit: Yes
-DisableExecuteRprofile: Yes

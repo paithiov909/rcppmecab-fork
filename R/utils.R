@@ -26,7 +26,7 @@ isBlank <- function(x, trim = TRUE, ...) {
   }
 }
 
-#' Check if mecab is available
+#' Check if mecab or its dynamic libarary is available
 #'
 #' @return Logical.
 #'

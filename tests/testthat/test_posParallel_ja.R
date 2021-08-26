@@ -1,5 +1,8 @@
 test_that("Test if posParallel works on Japanese", {
-  skip_if(.Platform$OS.type == "windows", "OS.type is windows. Skip testing.")
+  skip_if(
+    is_win_running_on_ci(),
+    " These tests are currently skipped under Windows machines running on CI."
+  )
   skip_if_not(isDynAvailable(), "No libmecab available. Skip testing.")
   skip_if_not(Sys.getenv("MECAB_LANG") == "ja", "MECAB_LANG is not ja. Skip testing.")
   ## posParallel(format = "list", join = TRUE)
@@ -31,7 +34,10 @@ test_that("Test if posParallel works on Japanese", {
 })
 
 test_that("Test if posParallel fails", {
-  skip_if(.Platform$OS.type == "windows", "OS.type is windows. Skip testing.")
+  skip_if(
+    is_win_running_on_ci(),
+    " These tests are currently skipped under Windows machines running on CI."
+  )
   skip_if_not(isDynAvailable(), "No libmecab available. Skip testing.")
   skip_if_not(Sys.getenv("MECAB_LANG") == "ja", "MECAB_LANG is not ja. Skip testing.")
   ## posParallel()
