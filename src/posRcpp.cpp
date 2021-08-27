@@ -7,25 +7,27 @@
 #include <Rcpp.h>
 #include <RcppThread.h>
 #include <boost/algorithm/string.hpp>
+#include <boost/tuple/tuple.hpp>
 #include "../inst/include/mecab.h"
 
 using namespace Rcpp;
 
-//' Call POS Tagger via `lapply` and return a list of named character vectors.
+//' Call tagger inside a loop and return a list of named character vectors.
 //'
 //' @param text Character vector.
 //' @param sys_dic String scalar.
 //' @param user_dic String scalar.
 //' @return list of named character vectors.
 //'
-//' @name posApplyRcpp
+//' @name posLoopRcpp
 //' @keywords internal
 //' @export
 //
 // [[Rcpp::interfaces(r, cpp)]]
 // [[Rcpp::export]]
-List posApplyRcpp(StringVector text, std::string sys_dic, std::string user_dic) {
+List posLoopRcpp(CharacterVector text, std::string sys_dic, std::string user_dic) {
 
+  // args
   std::string args = "";
   if (sys_dic != "") {
     args.append(" -d ");
@@ -48,20 +50,21 @@ List posApplyRcpp(StringVector text, std::string sys_dic, std::string user_dic) 
     Rcerr << "model is NULL" << std::endl;
     return R_NilValue;
   }
-
   tagger = mecab_model_new_tagger(model);
   lattice = mecab_model_new_lattice(model);
 
-  String parsed_morph;
-  String parsed_tag;
-  List result;
+  // reserve a list and assign named charactor vectors.
+  List result(text.size());
+  std::string input;
+  CharacterVector token_t;
+  CharacterVector tag_t;
 
-  std::function< StringVector(String) > func = [&](String elem) {
+  for (R_len_t i = 0; i < result.size(); ++i) {
 
-    StringVector parsed_string;
-    StringVector parsed_tagset;
+    std::vector< std::string > token;
+    std::vector< std::string > tag;
 
-    const std::string input = elem;
+    input = as<std::string>(text[i]);
     mecab_lattice_set_sentence(lattice, input.c_str());
     mecab_parse_lattice(tagger, lattice);
     node = mecab_lattice_get_bos_node(lattice);
@@ -72,36 +75,19 @@ List posApplyRcpp(StringVector text, std::string sys_dic, std::string user_dic) 
       else if (node->stat == MECAB_EOS_NODE)
         ;
       else {
-        parsed_morph = std::string(node->surface).substr(0, node->length);
-        parsed_morph.set_encoding(CE_UTF8);
-
         std::vector<std::string> features;
         boost::split(features, node->feature, boost::is_any_of(","));
-
-        String parsed_tag = features[0];
-        parsed_tag.set_encoding(CE_UTF8);
-
-        parsed_string.push_back(parsed_morph);
-        parsed_tagset.push_back(parsed_tag);
+        token.push_back(std::string(node->surface).substr(0, node->length));
+        tag.push_back(features[0]);
       }
     }
-
-    parsed_string.names() = parsed_tagset;
-    return parsed_string;
+    token_t = wrap(token);
+    tag_t = wrap(tag);
+    token_t.names() = tag_t;
+    result[i] = token_t;
   };
 
-  result = lapply(text, func);
-
-  StringVector result_name(text.size());
-
-  for (R_len_t h = 0; h < text.size(); ++h) {
-    String character_name = text[h];
-    character_name.set_encoding(CE_UTF8);
-    result_name[h] = character_name;
-  }
-
-  result.names() = result_name;
-
+  // clean
   mecab_destroy(tagger);
   mecab_lattice_destroy(lattice);
   mecab_model_destroy(model);
@@ -109,20 +95,20 @@ List posApplyRcpp(StringVector text, std::string sys_dic, std::string user_dic) 
   return result;
 }
 
-//' Call POS Tagger via `lapply` and return a named list.
+//' Call tagger inside a loop and return a named list.
 //'
 //' @param text Character vector.
 //' @param sys_dic String scalar.
 //' @param user_dic String scalar.
 //' @return named list.
 //'
-//' @name posApplyJoinRcpp
+//' @name posLoopJoinRcpp
 //' @keywords internal
 //' @export
 //
 // [[Rcpp::interfaces(r, cpp)]]
 // [[Rcpp::export]]
-List posApplyJoinRcpp(StringVector text, std::string sys_dic, std::string user_dic) {
+List posLoopJoinRcpp(StringVector text, std::string sys_dic, std::string user_dic) {
 
   std::string args = "";
   if (sys_dic != "") {
@@ -150,15 +136,16 @@ List posApplyJoinRcpp(StringVector text, std::string sys_dic, std::string user_d
   tagger = mecab_model_new_tagger(model);
   lattice = mecab_model_new_lattice(model);
 
-  String parsed_morph;
-  String parsed_tag;
-  List result;
+  // reserve a list and assign charactor vectors.
+  List result(text.size());
+  std::string input;
+  CharacterVector token_t;
 
-  std::function< StringVector(String) > func = [&](String elem) {
+  for (R_len_t i = 0; i < result.size(); ++i) {
 
-    StringVector parsed_string;
+    std::vector< std::string > token;
 
-    const std::string input = elem;
+    input = as<std::string>(text[i]);
     mecab_lattice_set_sentence(lattice, input.c_str());
     mecab_parse_lattice(tagger, lattice);
     node = mecab_lattice_get_bos_node(lattice);
@@ -169,34 +156,17 @@ List posApplyJoinRcpp(StringVector text, std::string sys_dic, std::string user_d
       else if (node->stat == MECAB_EOS_NODE)
         ;
       else {
-        parsed_morph = std::string(node->surface).substr(0, node->length);
-        parsed_morph.push_back("/");
-
         std::vector<std::string> features;
         boost::split(features, node->feature, boost::is_any_of(","));
-
-        parsed_morph.push_back(features[0]);
-        parsed_morph.set_encoding(CE_UTF8);
-
-        parsed_string.push_back(parsed_morph);
+        token.push_back(
+          std::string(node->surface).substr(0, node->length) + "/" + features[0]);
       }
     }
-
-    return parsed_string;
+    token_t = wrap(token);
+    result[i] = token_t;
   };
 
-  result = lapply(text, func);
-
-  StringVector result_name(text.size());
-
-  for (R_len_t h = 0; h < text.size(); ++h) {
-    String character_name = text[h];
-    character_name.set_encoding(CE_UTF8);
-    result_name[h] = character_name;
-  }
-
-  result.names() = result_name;
-
+  // clean
   mecab_destroy(tagger);
   mecab_lattice_destroy(lattice);
   mecab_model_destroy(model);
@@ -204,7 +174,7 @@ List posApplyJoinRcpp(StringVector text, std::string sys_dic, std::string user_d
   return result;
 }
 
-//' Call POS Tagger via loop and return a data.frame
+//' Call tagger inside a loop and return a data.frame
 //'
 //' @param text Character vector.
 //' @param sys_dic String scalar.
@@ -219,6 +189,7 @@ List posApplyJoinRcpp(StringVector text, std::string sys_dic, std::string user_d
 // [[Rcpp::export]]
 DataFrame posLoopDFRcpp(StringVector text, std::string sys_dic, std::string user_dic) {
 
+  // args
   std::string args = "";
   if (sys_dic != "") {
     args.append(" -d ");
@@ -245,29 +216,32 @@ DataFrame posLoopDFRcpp(StringVector text, std::string sys_dic, std::string user
   tagger = mecab_model_new_tagger(model);
   lattice = mecab_model_new_lattice(model);
 
-  StringVector::iterator it;
-
-  IntegerVector doc_id;
-  IntegerVector sentence_id;
-  IntegerVector token_id;
-  StringVector token;
-  StringVector pos;
-  StringVector subtype;
-  StringVector analytic;
-
-  String token_t;
-  String pos_t;
-  String subtype_t;
-  String analytic_t;
+  // In general, standard C++ data structure is much faster
+  // than Rcpp vector to use 'push_back'.
+  // See also "Chapter 30 Standard C++ data structures and algorithms | Rcpp for everyone"
+  // for details of this topic.
+  std::vector< std::vector < boost::tuple< std::string, std::string, std::string, std::string > > > results(text.size());
+  std::vector< int > doc_id;
+  std::vector< int > token_id;
+  std::vector< std::string > token;
+  std::vector< std::string > pos;
+  std::vector< std::string > subtype;
+  std::vector< std::string > analytic;
 
   int doc_number = 0;
-  int sentence_number = 1;
   int token_number = 1;
 
-  for (it = text.begin(); it != text.end(); ++it) {
+  for (R_len_t i = 0; i < text.size(); ++i) {
 
-    mecab_lattice_set_sentence(lattice, as<const char*>(*it));
+    std::vector< boost::tuple< std::string, std::string, std::string, std::string > > parsed;
+    std::string input = as<std::string>(text[i]);
+    mecab_lattice_set_sentence(lattice, input.c_str());
     mecab_parse_lattice(tagger, lattice);
+
+    // reserve size of lattice (number of tokens).
+    const size_t len = mecab_lattice_get_size(lattice);
+    results[i].reserve(len);
+
     node = mecab_lattice_get_bos_node(lattice);
 
     for (; node; node = node->next) {
@@ -276,68 +250,60 @@ DataFrame posLoopDFRcpp(StringVector text, std::string sys_dic, std::string user
       else if (node->stat == MECAB_EOS_NODE)
         ;
       else {
+        std::string parsed_morph = std::string(node->surface).substr(0, node->length);
         std::vector<std::string> features;
         boost::split(features, node->feature, boost::is_any_of(","));
 
-        token_t = std::string(node->surface).substr(0, node->length);
-        pos_t = features[0];
-        subtype_t = features[1];
+        std::string unk_t;
         // For parsing unk-feature when using Japanese MeCab and IPA-dict.
         if (features.size() > 7) {
-          analytic_t = features[7];
+          unk_t = features[7];
         } else {
-          analytic_t = "*";
+          unk_t = "*";
         }
 
-        // if (subtype_t == "*") {
-        //   subtype_t = "";
-        // }
-        // if (analytic_t == "*") {
-        //   analytic_t = "";
-        // }
-
-        token_t.set_encoding(CE_UTF8);
-        pos_t.set_encoding(CE_UTF8);
-        subtype_t.set_encoding(CE_UTF8);
-        analytic_t.set_encoding(CE_UTF8);
-
-        // append token, pos, and subtype
-        token.push_back(token_t);
-        pos.push_back(pos_t);
-        subtype.push_back(subtype_t);
-        analytic.push_back(analytic_t);
-
-        token_id.push_back(token_number);
-        token_number++;
-
-        // append sentence_id and token_id
-        sentence_id.push_back(sentence_number);
-        if (token_t == "." or token_t == "。") {
-          sentence_number++;
-          token_number = 1;
-        }
-
-        // append doc_id
-        doc_id.push_back(doc_number + 1);
+        parsed.push_back(boost::make_tuple(
+            parsed_morph,
+            features[0],
+            features[1],
+            unk_t));
       }
     }
-    sentence_number = 1;
-    token_number = 1;
-    doc_number++;
+    results[i] = parsed;
   }
 
+  // clean
   mecab_destroy(tagger);
   mecab_lattice_destroy(lattice);
   mecab_model_destroy(model);
 
+  // make columns for result data.frame.
+  for (size_t k = 0; k < results.size(); ++k) {
+    // check user interrupt (Ctrl+C).
+    if (k % 1000 == 0) checkUserInterrupt();
+
+    for (size_t l = 0; l < results[k].size(); ++l) {
+
+      token.push_back(boost::tuples::get<0>(results[k][l]));
+      pos.push_back(boost::tuples::get<1>(results[k][l]));
+      subtype.push_back(boost::tuples::get<2>(results[k][l]));
+      analytic.push_back(boost::tuples::get<3>(results[k][l]));
+
+      token_id.push_back(token_number);
+      token_number++;
+
+      doc_id.push_back(doc_number + 1);
+    }
+    token_number = 1;
+    doc_number++;
+  }
+
   return DataFrame::create(
     _["doc_id"] = doc_id,
-    _["sentence_id"] = sentence_id,
     _["token_id"] = token_id,
     _["token"] = token,
     _["pos"] = pos,
     _["subtype"] = subtype,
-    _["analytic"] = analytic
-  );
+    _["analytic"] = analytic,
+    _["stringsAsFactors"] = false);
 }
-

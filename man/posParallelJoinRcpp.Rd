@@ -2,7 +2,7 @@
 % Please edit documentation in R/RcppExports.R
 \name{posParallelJoinRcpp}
 \alias{posParallelJoinRcpp}
-\title{Call POS Tagger via `tbb::parallel_for` and return a named list.}
+\title{Call tagger inside 'tbb::parallel_for' and return a named list.}
 \arguments{
 \item{text}{Character vector.}
 
@@ -14,6 +14,6 @@
 named list.
 }
 \description{
-Call POS Tagger via `tbb::parallel_for` and return a named list.
+Call tagger inside 'tbb::parallel_for' and return a named list.
 }
 \keyword{internal}

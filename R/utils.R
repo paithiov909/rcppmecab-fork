@@ -6,16 +6,17 @@
 #'
 #' @return Logical values.
 #'
+#' @aliases is_blank
 #' @export
 isBlank <- function(x, trim = TRUE, ...) {
   if (!is.list(x) && length(x) <= 1) {
     if (is.null(x)) {
       return(TRUE)
     }
-    dplyr::case_when(
+    case_when(
       is.na(x) ~ TRUE,
       is.nan(x) ~ TRUE,
-      is.character(x) && nchar(ifelse(trim, stringi::stri_trim(x), x)) == 0 ~ TRUE,
+      is.character(x) && nchar(ifelse(trim, stri_trim(x), x)) == 0 ~ TRUE,
       TRUE ~ FALSE
     )
   } else {
@@ -26,17 +27,31 @@ isBlank <- function(x, trim = TRUE, ...) {
   }
 }
 
+#' @inherit isBlank
+is_blank <- isBlank
+
 #' Check if mecab or its dynamic libarary is available
 #'
 #' @return Logical.
 #'
+#' @keywords internal
 #' @export
-isDynAvailable <- function() {
+is_dyn_available <- function() {
   if (.Platform$OS.type == "windows") {
-    return(!isBlank(Sys.which(paste0("libmecab", .Platform$dynlib.ext))))
+    return(!is_blank(Sys.which(paste0("libmecab", .Platform$dynlib.ext))))
   } else {
-    return(!isBlank(Sys.which(paste0("mecab"))))
+    return(!is_blank(Sys.which(paste0("mecab"))))
   }
+}
+
+#' Format Character Vector
+#' @noRd
+#' @keywords internal
+reset_encoding <- function(vec, enc = "UTF-8") {
+  sapply(vec, function(elem) {
+    Encoding(elem) <- enc
+    return(elem)
+  }, USE.NAMES = FALSE)
 }
 
 #' Pack Output of POS Tagger
@@ -56,11 +71,11 @@ isDynAvailable <- function() {
 #' @export
 pack <- function(df, pull = "token", .collapse = " ") {
   res <- df %>%
-    dplyr::group_by(doc_id) %>%
-    dplyr::group_map(
-      ~ dplyr::pull(.x, {{ pull }}) %>%
-        stringi::stri_c(collapse = .collapse)
+    group_by(doc_id) %>%
+    group_map(
+      ~ pull(.x, {{ pull }}) %>%
+        stri_c(collapse = .collapse)
     ) %>%
-    purrr::imap_dfr(~ data.frame(doc_id = .y, text = .x))
+    imap_dfr(~ data.frame(doc_id = .y, text = .x))
   return(res)
 }

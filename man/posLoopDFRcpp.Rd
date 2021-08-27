@@ -2,7 +2,7 @@
 % Please edit documentation in R/RcppExports.R
 \name{posLoopDFRcpp}
 \alias{posLoopDFRcpp}
-\title{Call POS Tagger via loop and return a data.frame}
+\title{Call tagger inside a loop and return a data.frame}
 \arguments{
 \item{text}{Character vector.}
 
@@ -14,6 +14,6 @@
 data.frame.
 }
 \description{
-Call POS Tagger via loop and return a data.frame
+Call tagger inside a loop and return a data.frame
 }
 \keyword{internal}

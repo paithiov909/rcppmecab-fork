@@ -8,9 +8,60 @@
 #include <RcppThread.h>
 #include <RcppParallel.h>
 #include <boost/algorithm/string.hpp>
+#include <boost/tuple/tuple.hpp>
 #include "../inst/include/mecab.h"
 
-using namespace Rcpp;
+// structs for using in tbb::parallel_for
+namespace TextParser {
+
+struct TextParse
+{
+  TextParse(const std::vector<std::string>* sentences, std::vector< std::vector< boost::tuple< std::string, std::string > > >& results, mecab_model_t* model)
+    : sentences_(sentences), results_(results), model_(model)
+  {}
+
+  void operator()(const tbb::blocked_range<size_t>& range) const
+  {
+    mecab_t* tagger = mecab_model_new_tagger(model_);
+    mecab_lattice_t* lattice = mecab_model_new_lattice(model_);
+    const mecab_node_t* node;
+
+    for (size_t i = range.begin(); i < range.end(); ++i) {
+      std::vector< boost::tuple< std::string, std::string > > parsed;
+
+      mecab_lattice_set_sentence(lattice, (*sentences_)[i].c_str());
+      mecab_parse_lattice(tagger, lattice);
+
+      const size_t len = mecab_lattice_get_size(lattice);
+      parsed.reserve(len);
+
+      node = mecab_lattice_get_bos_node(lattice);
+
+      for (; node; node = node->next) {
+        if (node->stat == MECAB_BOS_NODE)
+          ;
+        else if (node->stat == MECAB_EOS_NODE)
+          ;
+        else {
+          std::string parsed_morph = std::string(node->surface).substr(0, node->length);
+          std::vector<std::string> features;
+          boost::split(features, node->feature, boost::is_any_of(","));
+          parsed.push_back(boost::make_tuple(
+              parsed_morph,
+              features[0]
+          ));
+        }
+      }
+      results_[i] = parsed; // mutex is not needed
+    }
+    mecab_lattice_destroy(lattice);
+    mecab_destroy(tagger);
+  }
+
+  const std::vector<std::string>* sentences_;
+  std::vector< std::vector< boost::tuple< std::string, std::string > > >& results_;
+  mecab_model_t* model_;
+};
 
 struct TextParseJoin
 {
@@ -47,10 +98,8 @@ struct TextParseJoin
           parsed.push_back(parsed_morph + "/" + features[0]);
         }
       }
-
       result_[i] = parsed; // mutex is not needed
     }
-
     mecab_lattice_destroy(lattice);
     mecab_destroy(tagger);
   }
@@ -62,8 +111,8 @@ struct TextParseJoin
 
 struct TextParseDF
 {
-  TextParseDF(const std::vector<std::string>* sentences, std::vector< std::vector < std::string > >& result, mecab_model_t* model)
-    : sentences_(sentences), result_(result), model_(model)
+  TextParseDF(const std::vector<std::string>* sentences, std::vector< std::vector< boost::tuple< std::string, std::string, std::string, std::string > > >& results, mecab_model_t* model)
+    : sentences_(sentences), results_(results), model_(model)
   {}
 
   void operator()(const tbb::blocked_range<size_t>& range) const
@@ -73,13 +122,14 @@ struct TextParseDF
     const mecab_node_t* node;
 
     for (size_t i = range.begin(); i < range.end(); ++i) {
-      std::vector< std::string > parsed;
+      std::vector< boost::tuple< std::string, std::string, std::string, std::string > > parsed;
 
       mecab_lattice_set_sentence(lattice, (*sentences_)[i].c_str());
       mecab_parse_lattice(tagger, lattice);
 
+      // reserve size of lattice (number of tokens).
       const size_t len = mecab_lattice_get_size(lattice);
-      parsed.reserve(len*4);
+      parsed.reserve(len);
 
       node = mecab_lattice_get_bos_node(lattice);
 
@@ -92,269 +142,41 @@ struct TextParseDF
           std::string parsed_morph = std::string(node->surface).substr(0, node->length);
           std::vector<std::string> features;
           boost::split(features, node->feature, boost::is_any_of(","));
-          parsed.push_back(parsed_morph);
-          parsed.push_back(features[0]);
-          parsed.push_back(features[1]);
+
+          std::string unk_t;
           // For parsing unk-feature when using Japanese MeCab and IPA-dict.
           if (features.size() > 7) {
-            parsed.push_back(features[7]);
+            unk_t = features[7];
           } else {
-            parsed.push_back("*");
+            unk_t = "*";
           }
+
+          parsed.push_back(boost::make_tuple(
+            parsed_morph,
+            features[0],
+            features[1],
+            unk_t
+          ));
         }
       }
-
-      result_[i] = parsed; // mutex is not needed
+      results_[i] = parsed; // mutex is not needed
     }
-
     mecab_lattice_destroy(lattice);
     mecab_destroy(tagger);
   }
 
   const std::vector<std::string>* sentences_;
-  std::vector< std::vector < std::string > >& result_;
+  std::vector< std::vector< boost::tuple< std::string, std::string, std::string, std::string > > >& results_;
   mecab_model_t* model_;
 };
 
-struct TextParse
-{
-  TextParse(const std::vector<std::string>* sentences, std::vector< std::vector < std::string > >& result, mecab_model_t* model)
-    : sentences_(sentences), result_(result), model_(model)
-  {}
+} // end namespace
 
-  void operator()(const tbb::blocked_range<size_t>& range) const
-  {
-    mecab_t* tagger = mecab_model_new_tagger(model_);
-    mecab_lattice_t* lattice = mecab_model_new_lattice(model_);
-    const mecab_node_t* node;
 
-    for (size_t i = range.begin(); i < range.end(); ++i) {
-      std::vector< std::string > parsed;
+using namespace Rcpp;
+using namespace TextParser;
 
-      mecab_lattice_set_sentence(lattice, (*sentences_)[i].c_str());
-      mecab_parse_lattice(tagger, lattice);
-
-      const size_t len = mecab_lattice_get_size(lattice);
-      parsed.reserve(len*2);
-
-      node = mecab_lattice_get_bos_node(lattice);
-
-      for (; node; node = node->next) {
-        if (node->stat == MECAB_BOS_NODE)
-          ;
-        else if (node->stat == MECAB_EOS_NODE)
-          ;
-        else {
-          std::string parsed_morph = std::string(node->surface).substr(0, node->length);
-          // add join mechanism
-          std::vector<std::string> features;
-          boost::split(features, node->feature, boost::is_any_of(","));
-          parsed.push_back(parsed_morph);
-          parsed.push_back(features[0]);
-        }
-      }
-
-      result_[i] = parsed; // mutex is not needed
-    }
-
-    mecab_lattice_destroy(lattice);
-    mecab_destroy(tagger);
-  }
-
-  const std::vector<std::string>* sentences_;
-  std::vector< std::vector < std::string > >& result_;
-  mecab_model_t* model_;
-};
-
-//' Call POS Tagger via `tbb::parallel_for` and return a named list.
-//'
-//' @param text Character vector.
-//' @param sys_dic String scalar.
-//' @param user_dic String scalar.
-//' @return named list.
-//'
-//' @name posParallelJoinRcpp
-//' @keywords internal
-//' @export
-//
-// [[Rcpp::interfaces(r, cpp)]]
-// [[Rcpp::export]]
-List posParallelJoinRcpp(std::vector<std::string> text, std::string sys_dic, std::string user_dic) {
-
-  std::vector< std::vector < std::string > > results(text.size());
-  List result;
-
-  std::string args = "";
-  if (sys_dic != "") {
-    args.append(" -d ");
-    args.append(sys_dic);
-  }
-  if (user_dic != "") {
-    args.append(" -u ");
-    args.append(user_dic);
-  }
-
-  // lattice model
-  mecab_model_t* model;
-
-  // create model
-  model = mecab_model_new2(args.c_str());
-  if (!model) {
-    Rcerr << "model is NULL" << std::endl;
-    return R_NilValue;
-  }
-
-  // parallel argorithm with Intell TBB
-  // RcppParallel doesn't get CharacterVector as input and output
-  TextParseJoin func = TextParseJoin(&text, results, model);
-  tbb::parallel_for(tbb::blocked_range<size_t>(0, text.size()), func);
-
-  mecab_model_destroy(model);
-
-  // explicit type conversion
-  for (size_t k = 0; k < results.size(); ++k) {
-    CharacterVector resultString;
-    for (size_t l = 0; l < results[k].size(); ++l) {
-      String morph_copy; // type conversion to Rcpp::String and set encoding
-      morph_copy = results[k][l];
-      morph_copy.set_encoding(CE_UTF8);
-      resultString.push_back(morph_copy);
-    }
-    result.push_back(resultString);
-  }
-
-  StringVector result_name(text.size());
-
-  for (size_t h = 0; h < text.size(); ++h) {
-    String character_name = text[h];
-    character_name.set_encoding(CE_UTF8);
-    result_name[h] = character_name;
-  }
-
-  result.names() = result_name;
-
-  return result;
-}
-
-//' Call POS Tagger via `tbb::parallel_for` and return a data.frame
-//'
-//' @param text Character vector.
-//' @param sys_dic String scalar.
-//' @param user_dic String scalar.
-//' @return data.frame.
-//'
-//' @name posParallelDFRcpp
-//' @keywords internal
-//' @export
-//
-// [[Rcpp::interfaces(r, cpp)]]
-// [[Rcpp::export]]
-DataFrame posParallelDFRcpp(StringVector text, std::string sys_dic, std::string user_dic) {
-
-  std::vector< std::vector < std::string > > results(text.size());
-  std::vector< std::string > input = as<std::vector< std::string > >(text);
-
-  IntegerVector doc_id;
-  IntegerVector sentence_id;
-  IntegerVector token_id;
-  StringVector token;
-  StringVector pos;
-  StringVector subtype;
-  StringVector analytic;
-
-  String token_t;
-  String pos_t;
-  String subtype_t;
-  String analytic_t;
-
-  int doc_number = 0;
-  int sentence_number = 1;
-  int token_number = 1;
-  StringVector text_names;
-
-  std::string args = "";
-  if (sys_dic != "") {
-    args.append(" -d ");
-    args.append(sys_dic);
-  }
-  if (user_dic != "") {
-    args.append(" -u ");
-    args.append(user_dic);
-  }
-
-  // lattice model
-  mecab_model_t* model;
-
-  // create model
-  model = mecab_model_new2(args.c_str());
-  if (!model) {
-    Rcerr << "model is NULL" << std::endl;
-    return R_NilValue;
-  }
-
-  // parallel argorithm with Intell TBB
-  // RcppParallel doesn't get CharacterVector as input and output
-  TextParseDF func = TextParseDF(&input, results, model);
-  tbb::parallel_for(tbb::blocked_range<size_t>(0, input.size()), func);
-
-  mecab_model_destroy(model);
-
-  // explicit type conversion
-  for (size_t k = 0; k < results.size(); ++k) {
-    for (size_t l = 0; l < results[k].size(); l += 4) {
-      token_t = results[k][l];
-      pos_t = results[k][l + 1];
-      subtype_t = results[k][l + 2];
-      analytic_t = results[k][l + 3];
-
-      // if (subtype_t == "*") {
-      //   subtype_t = "";
-      // }
-      // if (analytic_t == "*") {
-      //   analytic_t = "";
-      // }
-
-      token_t.set_encoding(CE_UTF8);
-      pos_t.set_encoding(CE_UTF8);
-      subtype_t.set_encoding(CE_UTF8);
-      analytic_t.set_encoding(CE_UTF8);
-
-      token.push_back(token_t);
-      pos.push_back(pos_t);
-      subtype.push_back(subtype_t);
-      analytic.push_back(analytic_t);
-
-      token_id.push_back(token_number);
-      token_number++;
-
-      // append sentence_id and token_id
-      sentence_id.push_back(sentence_number);
-      if (token_t == "." or token_t == "。") {
-        sentence_number++;
-        token_number = 1;
-      }
-
-      // append doc_id
-      doc_id.push_back(doc_number + 1);
-
-    }
-    sentence_number = 1;
-    token_number = 1;
-    doc_number++;
-  }
-
-  return DataFrame::create(
-    _["doc_id"] = doc_id,
-    _["sentence_id"] = sentence_id,
-    _["token_id"] = token_id,
-    _["token"] = token,
-    _["pos"] = pos,
-    _["subtype"] = subtype,
-    _["analytic"] = analytic,
-    _["stringsAsFactors"] = false);
-}
-
-//' Call POS Tagger via `tbb::parallel_for` and return a list of named character vectors.
+//' Call tagger inside 'tbb::parallel_for' and return a list of named character vectors.
 //'
 //' @param text Character vector.
 //' @param sys_dic String scalar.
@@ -369,9 +191,7 @@ DataFrame posParallelDFRcpp(StringVector text, std::string sys_dic, std::string 
 // [[Rcpp::export]]
 List posParallelRcpp( std::vector<std::string> text, std::string sys_dic, std::string user_dic ) {
 
-  std::vector< std::vector < std::string > > results(text.size());
-  List result;
-
+  // args
   std::string args = "";
   if (sys_dic != "") {
     args.append(" -d ");
@@ -392,40 +212,186 @@ List posParallelRcpp( std::vector<std::string> text, std::string sys_dic, std::s
     return R_NilValue;
   }
 
+  std::vector< std::vector< boost::tuple< std::string, std::string > > > results(text.size());
+  std::vector< std::vector< std::string > > token(text.size());
+  std::vector< std::vector< std::string > > tag(text.size());
+
   // parallel argorithm with Intell TBB
   // RcppParallel doesn't get CharacterVector as input and output
   TextParse func = TextParse(&text, results, model);
   tbb::parallel_for(tbb::blocked_range<size_t>(0, text.size()), func);
 
+  // clean
   mecab_model_destroy(model);
 
-  // explicit type conversion
+  // make columns for result data.frame.
   for (size_t k = 0; k < results.size(); ++k) {
-    CharacterVector resultString;
-    CharacterVector resultTag;
-    for (size_t l = 0; l < results[k].size(); l += 2) {
-      String morph_copy; // type conversion to Rcpp::String and set encoding
-      String tags_copy;
-      morph_copy = results[k][l];
-      tags_copy = results[k][l + 1];
-      morph_copy.set_encoding(CE_UTF8);
-      tags_copy.set_encoding(CE_UTF8);
-      resultString.push_back(morph_copy);
-      resultTag.push_back(tags_copy);
+    // check user interrupt (Ctrl+C).
+    if (k % 1000 == 0) checkUserInterrupt();
+
+    for (size_t l = 0; l < results[k].size(); ++l) {
+      token[k].push_back(boost::tuples::get<0>(results[k][l]));
+      tag[k].push_back(boost::tuples::get<1>(results[k][l]));
     }
-    resultString.names() = resultTag;
-    result.push_back(resultString);
   }
-
-  StringVector result_name(text.size());
-
-  for (size_t h = 0; h < text.size(); ++h) {
-    String character_name = text[h];
-    character_name.set_encoding(CE_UTF8);
-    result_name[h] = character_name;
+  // reserve a list and assign named charactor vectors.
+  List result(text.size());
+  for (R_len_t i = 0; i < result.size(); ++i) {
+    CharacterVector token_t = wrap(token[i]);
+    CharacterVector tag_t = wrap(tag[i]);
+    token_t.names() = tag_t;
+    result[i] = token_t;
   }
-
-  result.names() = result_name;
 
   return result;
+}
+
+//' Call tagger inside 'tbb::parallel_for' and return a named list.
+//'
+//' @param text Character vector.
+//' @param sys_dic String scalar.
+//' @param user_dic String scalar.
+//' @return named list.
+//'
+//' @name posParallelJoinRcpp
+//' @keywords internal
+//' @export
+//
+// [[Rcpp::interfaces(r, cpp)]]
+// [[Rcpp::export]]
+List posParallelJoinRcpp(std::vector<std::string> text, std::string sys_dic, std::string user_dic) {
+
+  // args
+  std::string args = "";
+  if (sys_dic != "") {
+    args.append(" -d ");
+    args.append(sys_dic);
+  }
+  if (user_dic != "") {
+    args.append(" -u ");
+    args.append(user_dic);
+  }
+
+  // lattice model
+  mecab_model_t* model;
+
+  // create model
+  model = mecab_model_new2(args.c_str());
+  if (!model) {
+    Rcerr << "model is NULL" << std::endl;
+    return R_NilValue;
+  }
+
+  std::vector< std::vector< std::string > > results(text.size());
+  std::vector< std::vector< std::string > > result(text.size());
+
+  // parallel argorithm with Intell TBB
+  // RcppParallel doesn't get CharacterVector as input and output
+  TextParseJoin func = TextParseJoin(&text, results, model);
+  tbb::parallel_for(tbb::blocked_range<size_t>(0, text.size()), func);
+
+  // clean
+  mecab_model_destroy(model);
+
+  for (size_t k = 0; k < results.size(); ++k) {
+    // Check user interrupt (Ctrl+C).
+    if (k % 1000 == 0) checkUserInterrupt();
+
+    result[k].reserve(results[k].size());
+    for (size_t l = 0; l < results[k].size(); ++l) {
+      result[k].push_back(results[k][l]);
+    }
+  }
+
+  return wrap(result);
+}
+
+//' Call tagger inside 'tbb::parallel_for' and return a data.frame
+//'
+//' @param text Character vector.
+//' @param sys_dic String scalar.
+//' @param user_dic String scalar.
+//' @return data.frame.
+//'
+//' @name posParallelDFRcpp
+//' @keywords internal
+//' @export
+//
+// [[Rcpp::interfaces(r, cpp)]]
+// [[Rcpp::export]]
+DataFrame posParallelDFRcpp(std::vector<std::string> text, std::string sys_dic, std::string user_dic) {
+
+  // args
+  std::string args = "";
+  if (sys_dic != "") {
+    args.append(" -d ");
+    args.append(sys_dic);
+  }
+  if (user_dic != "") {
+    args.append(" -u ");
+    args.append(user_dic);
+  }
+
+  // lattice model
+  mecab_model_t* model;
+
+  // create model
+  model = mecab_model_new2(args.c_str());
+  if (!model) {
+    Rcerr << "model is NULL" << std::endl;
+    return R_NilValue;
+  }
+
+  // In general, standard C++ data structure is much faster
+  // than Rcpp vector to use 'push_back'.
+  // See also "Chapter 30 Standard C++ data structures and algorithms | Rcpp for everyone"
+  // for details of this topic.
+  std::vector< std::vector < boost::tuple< std::string, std::string, std::string, std::string > > > results(text.size());
+  std::vector< int > doc_id;
+  std::vector< int > token_id;
+  std::vector< std::string > token;
+  std::vector< std::string > pos;
+  std::vector< std::string > subtype;
+  std::vector< std::string > analytic;
+
+  int doc_number = 0;
+  int token_number = 1;
+
+  // parallel argorithm with Intell TBB
+  // RcppParallel doesn't get CharacterVector as input and output
+  TextParseDF func = TextParseDF(&text, results, model);
+  tbb::parallel_for(tbb::blocked_range<size_t>(0, text.size()), func);
+
+  // clean
+  mecab_model_destroy(model);
+
+  // make columns for result data.frame.
+  for (size_t k = 0; k < results.size(); ++k) {
+    // check user interrupt (Ctrl+C).
+    if (k % 1000 == 0) checkUserInterrupt();
+
+    for (size_t l = 0; l < results[k].size(); ++l) {
+
+      token.push_back(boost::tuples::get<0>(results[k][l]));
+      pos.push_back(boost::tuples::get<1>(results[k][l]));
+      subtype.push_back(boost::tuples::get<2>(results[k][l]));
+      analytic.push_back(boost::tuples::get<3>(results[k][l]));
+
+      token_id.push_back(token_number);
+      token_number++;
+
+      doc_id.push_back(doc_number + 1);
+    }
+    token_number = 1;
+    doc_number++;
+  }
+
+  return DataFrame::create(
+    _["doc_id"] = doc_id,
+    _["token_id"] = token_id,
+    _["token"] = token,
+    _["pos"] = pos,
+    _["subtype"] = subtype,
+    _["analytic"] = analytic,
+    _["stringsAsFactors"] = false);
 }

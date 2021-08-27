@@ -39,43 +39,13 @@
 #'
 #' @export
 pos <- function(sentence, join = TRUE, format = c("list", "data.frame"), sys_dic = "", user_dic = "") {
-  if (typeof(sentence) != "character") {
-    if (typeof(sentence) == "factor") {
-      stop("The type of input sentence is a factor. Please typesetting it with as.character().")
-    } else {
-      stop("The function gets a character vector only.")
-    }
-  }
-
-  if (!isBlank(getOption("mecabSysDic"))) sys_dic <- getOption("mecabSysDic")
-
-  sentence <- purrr::set_names(stringi::stri_enc_toutf8(sentence), names(sentence))
-  format <- match.arg(format)
-  sys_dic <- paste0(sys_dic, collapse = "")
-  user_dic <- paste0(user_dic, collapse = "")
-
-  if (format == "data.frame") {
-    result <- posLoopDFRcpp(sentence, sys_dic, user_dic)
-    result <- dplyr::mutate(result, dplyr::across(where(is.character), ~ dplyr::na_if(., "*")))
-    if (!is.null(names(sentence))) {
-      result$doc_id <- factor(
-        result$doc_id,
-        levels = seq_along(sentence),
-        labels = names(sentence)
+  tagger <-
+    tagger_impl(
+      list(
+        df = posLoopDFRcpp,
+        join = posLoopJoinRcpp,
+        base = posLoopRcpp
       )
-    } else {
-      result$doc_id <- factor(
-        result$doc_id,
-        levels = seq_along(sentence)
-      )
-    }
-  } else {
-    if (join == TRUE) {
-      result <- posApplyJoinRcpp(sentence, sys_dic, user_dic)
-    } else {
-      result <- posApplyRcpp(sentence, sys_dic, user_dic)
-    }
-  }
-
-  return(result)
+    )
+  tagger(sentence, join, format, sys_dic, user_dic)
 }
