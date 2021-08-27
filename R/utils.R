@@ -27,7 +27,7 @@ isBlank <- function(x, trim = TRUE, ...) {
   }
 }
 
-#' @inherit isBlank
+#' @noRd
 is_blank <- isBlank
 
 #' Check if mecab or its dynamic libarary is available

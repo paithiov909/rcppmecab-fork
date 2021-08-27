@@ -56,5 +56,5 @@ posParallel <- function(sentence, join = TRUE, format = c("list", "data.frame"),
   tagger(sentence, join, format, sys_dic, user_dic)
 }
 
-#' @inherit posParallel
+#' @noRd
 pos_parallel <- posParallel
