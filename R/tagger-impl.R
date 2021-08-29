@@ -12,8 +12,8 @@ tagger_impl <- function(functions) {
     if (!is_blank(getOption("mecabSysDic"))) sys_dic <- getOption("mecabSysDic")
 
     sentence <- stri_enc_toutf8(sentence)
-    format <- match.arg(format)
 
+    format <- match.arg(format)
     sys_dic <- paste0(sys_dic, collapse = "")
     user_dic <- paste0(user_dic, collapse = "")
 
@@ -21,19 +21,8 @@ tagger_impl <- function(functions) {
       result <-
         functions$df(sentence, sys_dic, user_dic) %>%
         mutate(across(where(is.character), ~ reset_encoding(.))) %>%
-        mutate(across(where(is.character), ~ na_if(., "*")))
-      if (!is.null(names(sentence))) {
-        result$doc_id <- factor(
-          result$doc_id,
-          levels = seq_along(sentence),
-          labels = names(sentence)
-        )
-      } else {
-        result$doc_id <- factor(
-          result$doc_id,
-          levels = seq_along(sentence)
-        )
-      }
+        mutate(across(where(is.character), ~ na_if(., "*"))) %>%
+        mutate(doc_id = as.factor(doc_id))
     } else {
       if (join == TRUE) {
         result <-

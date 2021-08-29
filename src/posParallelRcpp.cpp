@@ -229,9 +229,10 @@ List posParallelRcpp( std::vector<std::string> text, std::string sys_dic, std::s
     // check user interrupt (Ctrl+C).
     if (k % 1000 == 0) checkUserInterrupt();
 
-    for (size_t l = 0; l < results[k].size(); ++l) {
-      token[k].push_back(boost::tuples::get<0>(results[k][l]));
-      tag[k].push_back(boost::tuples::get<1>(results[k][l]));
+    std::vector< boost::tuple< std::string, std::string > >::const_iterator l;
+    for (l = results[k].begin(); l != results[k].end(); ++l) {
+      token[k].push_back(boost::tuples::get<0>(*l));
+      tag[k].push_back(boost::tuples::get<1>(*l));
     }
   }
   // reserve a list and assign named charactor vectors.
@@ -298,8 +299,9 @@ List posParallelJoinRcpp(std::vector<std::string> text, std::string sys_dic, std
     if (k % 1000 == 0) checkUserInterrupt();
 
     result[k].reserve(results[k].size());
-    for (size_t l = 0; l < results[k].size(); ++l) {
-      result[k].push_back(results[k][l]);
+    std::vector< std::string >::const_iterator l;
+    for (l = results[k].begin(); l != results[k].end(); ++l) {
+      result[k].push_back(*l);
     }
   }
 
@@ -370,12 +372,13 @@ DataFrame posParallelDFRcpp(std::vector<std::string> text, std::string sys_dic, 
     // check user interrupt (Ctrl+C).
     if (k % 1000 == 0) checkUserInterrupt();
 
-    for (size_t l = 0; l < results[k].size(); ++l) {
+    std::vector < boost::tuple< std::string, std::string, std::string, std::string > >::const_iterator l;
+    for (l = results[k].begin(); l != results[k].end(); ++l) {
 
-      token.push_back(boost::tuples::get<0>(results[k][l]));
-      pos.push_back(boost::tuples::get<1>(results[k][l]));
-      subtype.push_back(boost::tuples::get<2>(results[k][l]));
-      analytic.push_back(boost::tuples::get<3>(results[k][l]));
+      token.push_back(boost::tuples::get<0>(*l));
+      pos.push_back(boost::tuples::get<1>(*l));
+      subtype.push_back(boost::tuples::get<2>(*l));
+      analytic.push_back(boost::tuples::get<3>(*l));
 
       token_id.push_back(token_number);
       token_number++;
