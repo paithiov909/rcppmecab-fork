@@ -57,4 +57,5 @@ posParallel <- function(sentence, join = TRUE, format = c("list", "data.frame"),
 }
 
 #' @noRd
+#' @export
 pos_parallel <- posParallel

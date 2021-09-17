@@ -266,7 +266,8 @@ DataFrame posLoopDFRcpp(StringVector text, std::string sys_dic, std::string user
             parsed_morph,
             features[0],
             features[1],
-            unk_t));
+            unk_t
+        ));
       }
     }
     results[i] = parsed;

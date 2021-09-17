@@ -19,7 +19,7 @@ License: GPL
 Encoding: UTF-8
 LazyData: true
 BugReports: https://github.com/junhewk/RcppMeCab/issues
-RoxygenNote: 7.1.1
+RoxygenNote: 7.1.2
 Language: en-US
 LinkingTo:
     Rcpp,
@@ -29,7 +29,7 @@ LinkingTo:
 Imports:
     Rcpp,
     RcppParallel,
-    dplyr,
+    dplyr (>= 0.8.0),
     purrr,
     stringi
 Suggests:

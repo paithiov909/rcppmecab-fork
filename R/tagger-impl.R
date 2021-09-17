@@ -1,5 +1,4 @@
 #' @noRd
-#' @keywords internal
 tagger_impl <- function(functions) {
   function(sentence, join = TRUE, format = c("list", "data.frame"), sys_dic = "", user_dic = "") {
     if (typeof(sentence) != "character") {

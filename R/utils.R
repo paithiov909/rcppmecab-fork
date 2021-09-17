@@ -28,6 +28,7 @@ isBlank <- function(x, trim = TRUE, ...) {
 }
 
 #' @noRd
+#' @export
 is_blank <- isBlank
 
 #' Check if mecab or its dynamic libarary is available
