@@ -6,7 +6,7 @@
 ## --------------------------------------- ##
 #' @import dplyr
 #' @import purrr
-#' @importFrom stringi stri_enc_toutf8 stri_trim stri_c
+#' @importFrom stringi stri_enc_toutf8 stri_trim stri_c stri_split_boundaries
 ## usethis namespace: end
 NULL
 

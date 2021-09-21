@@ -18,6 +18,7 @@ StripTrailingWhitespace: Yes
 BuildType: Package
 PackageUseDevtools: Yes
 PackageInstallArgs: --no-multiarch
+PackageBuildBinaryArgs: --no-multiarch
 PackageRoxygenize: rd,collate,namespace
 
 QuitChildProcessesOnExit: Yes

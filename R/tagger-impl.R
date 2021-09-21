@@ -1,6 +1,6 @@
 #' @noRd
 tagger_impl <- function(functions) {
-  function(sentence, join = TRUE, format = c("list", "data.frame"), sys_dic = "", user_dic = "") {
+  function(sentence, join = TRUE, format = c("list", "data.frame"), sys_dic = "", user_dic = "", split = TRUE) {
     if (typeof(sentence) != "character") {
       if (typeof(sentence) == "factor") {
         stop("The type of input sentence is a factor. Please typesetting it with as.character().")
@@ -9,6 +9,7 @@ tagger_impl <- function(functions) {
       }
     }
     if (!is_blank(getOption("mecabSysDic"))) sys_dic <- getOption("mecabSysDic")
+    if (!is_blank(getOption("mecabSplit"))) split <- as.logical(getOption("mecabSplit"))
 
     sentence <- stri_enc_toutf8(sentence)
 
@@ -17,11 +18,24 @@ tagger_impl <- function(functions) {
     user_dic <- paste0(user_dic, collapse = "")
 
     if (format == "data.frame") {
+      if (identical(split, TRUE)) {
+        sentence <- stri_split_boundaries(sentence, type = "sentence")
+      } else {
+        sentence <- as.vector(sentence, mode = "list")
+      }
       result <-
-        functions$df(sentence, sys_dic, user_dic) %>%
+        imap_dfr(sentence, function(vec, doc_id) {
+          bind_cols(
+            data.frame(doc_id = doc_id),
+            functions$df(vec, sys_dic, user_dic)
+          )
+        }) %>%
         mutate(across(where(is.character), ~ reset_encoding(.))) %>%
         mutate(across(where(is.character), ~ na_if(., "*"))) %>%
-        mutate(doc_id = as.factor(doc_id))
+        mutate(
+          doc_id = as.factor(doc_id),
+          sentence_id = as.factor(sentence_id)
+        )
     } else {
       if (join == TRUE) {
         result <-

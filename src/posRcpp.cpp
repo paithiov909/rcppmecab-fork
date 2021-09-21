@@ -221,14 +221,14 @@ DataFrame posLoopDFRcpp(StringVector text, std::string sys_dic, std::string user
   // See also "Chapter 30 Standard C++ data structures and algorithms | Rcpp for everyone"
   // for details of this topic.
   std::vector< std::vector < boost::tuple< std::string, std::string, std::string, std::string > > > results(text.size());
-  std::vector< int > doc_id;
+  std::vector< int > sentence_id;
   std::vector< int > token_id;
   std::vector< std::string > token;
   std::vector< std::string > pos;
   std::vector< std::string > subtype;
   std::vector< std::string > analytic;
 
-  int doc_number = 0;
+  int sentence_number = 0;
   int token_number = 1;
 
   for (R_len_t i = 0; i < text.size(); ++i) {
@@ -294,14 +294,14 @@ DataFrame posLoopDFRcpp(StringVector text, std::string sys_dic, std::string user
       token_id.push_back(token_number);
       token_number++;
 
-      doc_id.push_back(doc_number + 1);
+      sentence_id.push_back(sentence_number + 1);
     }
     token_number = 1;
-    doc_number++;
+    sentence_number++;
   }
 
   return DataFrame::create(
-    _["doc_id"] = doc_id,
+    _["sentence_id"] = sentence_id,
     _["token_id"] = token_id,
     _["token"] = token,
     _["pos"] = pos,
