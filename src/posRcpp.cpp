@@ -4,6 +4,8 @@
 #define R_NO_REMAP
 #define RCPPTHREAD_OVERRIDE_THREAD 1
 
+#include <iostream>
+#include <sstream>
 #include <Rcpp.h>
 #include <RcppThread.h>
 #include <boost/algorithm/string.hpp>
@@ -28,15 +30,20 @@ using namespace Rcpp;
 List posLoopRcpp(CharacterVector text, std::string sys_dic, std::string user_dic) {
 
   // args
-  std::string args = "";
+  std::vector<std::string> args;
+  args.push_back("mecab");
   if (sys_dic != "") {
-    args.append(" -d ");
-    args.append(sys_dic);
+    args.push_back("-d");
+    args.push_back(sys_dic);
   }
   if (user_dic != "") {
-    args.append(" -u ");
-    args.append(user_dic);
+    args.push_back("-u");
+    args.push_back(user_dic);
   }
+  const char* delim = " ";
+  std::ostringstream os;
+  std::copy(args.begin(), args.end(), std::ostream_iterator<std::string>(os, delim));
+  std::string argv = os.str();
 
   // lattice model
   mecab_model_t* model;
@@ -45,7 +52,7 @@ List posLoopRcpp(CharacterVector text, std::string sys_dic, std::string user_dic
   const mecab_node_t* node;
 
   // create model
-  model = mecab_model_new2(args.c_str());
+  model = mecab_model_new2(argv.c_str());
   if (!model) {
     Rcerr << "model is NULL" << std::endl;
     return R_NilValue;
@@ -110,15 +117,20 @@ List posLoopRcpp(CharacterVector text, std::string sys_dic, std::string user_dic
 // [[Rcpp::export]]
 List posLoopJoinRcpp(StringVector text, std::string sys_dic, std::string user_dic) {
 
-  std::string args = "";
+  std::vector<std::string> args;
+  args.push_back("mecab");
   if (sys_dic != "") {
-    args.append(" -d ");
-    args.append(sys_dic);
+    args.push_back("-d");
+    args.push_back(sys_dic);
   }
   if (user_dic != "") {
-    args.append(" -u ");
-    args.append(user_dic);
+    args.push_back("-u");
+    args.push_back(user_dic);
   }
+  const char* delim = " ";
+  std::ostringstream os;
+  std::copy(args.begin(), args.end(), std::ostream_iterator<std::string>(os, delim));
+  std::string argv = os.str();
 
   // lattice model
   mecab_model_t* model;
@@ -127,7 +139,7 @@ List posLoopJoinRcpp(StringVector text, std::string sys_dic, std::string user_di
   const mecab_node_t* node;
 
   // create model
-  model = mecab_model_new2(args.c_str());
+  model = mecab_model_new2(argv.c_str());
   if (!model) {
     Rcerr << "model is NULL" << std::endl;
     return R_NilValue;
@@ -190,15 +202,20 @@ List posLoopJoinRcpp(StringVector text, std::string sys_dic, std::string user_di
 DataFrame posLoopDFRcpp(StringVector text, std::string sys_dic, std::string user_dic) {
 
   // args
-  std::string args = "";
+  std::vector<std::string> args;
+  args.push_back("mecab");
   if (sys_dic != "") {
-    args.append(" -d ");
-    args.append(sys_dic);
+    args.push_back("-d");
+    args.push_back(sys_dic);
   }
   if (user_dic != "") {
-    args.append(" -u ");
-    args.append(user_dic);
+    args.push_back("-u");
+    args.push_back(user_dic);
   }
+  const char* delim = " ";
+  std::ostringstream os;
+  std::copy(args.begin(), args.end(), std::ostream_iterator<std::string>(os, delim));
+  std::string argv = os.str();
 
   // lattice model
   mecab_model_t* model;
@@ -207,7 +224,7 @@ DataFrame posLoopDFRcpp(StringVector text, std::string sys_dic, std::string user
   const mecab_node_t* node;
 
   // create model
-  model = mecab_model_new2(args.c_str());
+  model = mecab_model_new2(argv.c_str());
   if (!model) {
     Rcerr << "model is NULL" << std::endl;
     return R_NilValue;
