@@ -56,6 +56,7 @@ posParallel <- function(sentence, join = TRUE, format = c("list", "data.frame"),
   tagger(sentence, join, format, sys_dic, user_dic)
 }
 
+#' Alias of `posParallel`
 #' @noRd
 #' @export
 pos_parallel <- posParallel

@@ -27,6 +27,7 @@ isBlank <- function(x, trim = TRUE, ...) {
   }
 }
 
+#' Alias of `isBlank`
 #' @noRd
 #' @export
 is_blank <- isBlank
