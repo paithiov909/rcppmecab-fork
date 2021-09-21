@@ -28,7 +28,7 @@ test_that("Test if posParallel works on Korean", {
     posParallel(
       enc2utf8("mecab-ko-dic-msvc\ub294 mecab-ko-msvc\uc5d0\uc11c \uc0ac\uc6a9\ud560 \uc218 \uc788\ub294 mecab-ko-dic\uc744 \ube4c\ub4dc\ud558\ub294 \ud504\ub85c\uc81d\ud2b8\uc785\ub2c8\ub2e4"),
       format = "data.frame"
-    )[4, 4],
+    )[4, 5],
     enc2utf8("SY")
   )
 })
