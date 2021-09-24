@@ -1,6 +1,7 @@
 # RcppMeCab 0.0.1.3
 
 + Add analytic forms of conjugated morphemes when format == "data.frame"
++ A bug fixed; Even when the features of system dictionary is less than 7, `format="data.frame"` works properly.
 
 # RcppMeCab 0.0.1.2
 

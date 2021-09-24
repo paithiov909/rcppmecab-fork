@@ -1,7 +1,12 @@
 #' @noRd
 ## usethis namespace: start
-#' @importFrom Rcpp sourceCpp
+#' @import Rcpp
+#' @importFrom RcppParallel RcppParallelLibs
 #' @useDynLib RcppMeCab, .registration=TRUE
+## --------------------------------------- ##
+#' @import dplyr
+#' @import purrr
+#' @importFrom stringi stri_enc_toutf8 stri_trim stri_c stri_split_boundaries
 ## usethis namespace: end
 NULL
 
