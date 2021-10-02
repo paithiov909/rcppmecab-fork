@@ -50,8 +50,7 @@ struct TextParse
           boost::split(features, node->feature, boost::is_any_of(","));
           parsed.push_back(boost::make_tuple(
               parsed_morph,
-              features[0]
-          ));
+              features[0]));
         }
       }
       results_[i] = parsed; // mutex is not needed
@@ -157,8 +156,7 @@ struct TextParseDF
             parsed_morph,
             features[0],
             features[1],
-            unk_t
-          ));
+            unk_t));
         }
       }
       results_[i] = parsed; // mutex is not needed
@@ -296,7 +294,6 @@ List posParallelJoinRcpp(std::vector<std::string> text, std::string sys_dic, std
   }
 
   std::vector< std::vector< std::string > > results(text.size());
-  std::vector< std::vector< std::string > > result(text.size());
 
   // parallel argorithm with Intell TBB
   // RcppParallel doesn't get CharacterVector as input and output
@@ -306,18 +303,7 @@ List posParallelJoinRcpp(std::vector<std::string> text, std::string sys_dic, std
   // clean
   mecab_model_destroy(model);
 
-  for (size_t k = 0; k < results.size(); ++k) {
-    // Check user interrupt (Ctrl+C).
-    if (k % 1000 == 0) checkUserInterrupt();
-
-    result[k].reserve(results[k].size());
-    std::vector< std::string >::const_iterator l;
-    for (l = results[k].begin(); l != results[k].end(); ++l) {
-      result[k].push_back(*l);
-    }
-  }
-
-  return wrap(result);
+  return wrap(results);
 }
 
 //' Call tagger inside 'tbb::parallel_for' and return a data.frame

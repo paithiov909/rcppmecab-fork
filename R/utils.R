@@ -60,20 +60,13 @@ reset_encoding <- function(vec, enc = "UTF-8") {
 #'
 #' @param df Output of \code{pos(format = "data.frame")} or \code{posParallel(format = "data.frame")}.
 #' @param pull Column name to be packed into data.frame. Default value is `token`.
-#' @param .collapse This argument will be passed to \code{stringi::stri_c()}.
+#' @param .collapse This argument is passed to \code{stringi::stri_c()}.
 #' @return data.frame
-#'
-#' @examples
-#' \dontrun{
-#' sentence <- c("some UTF-8 texts")
-#' result <- pos(sentence, format = "data.frame")
-#' pack(result)
-#' }
 #'
 #' @export
 pack <- function(df, pull = "token", .collapse = " ") {
   res <- df %>%
-    group_by(doc_id) %>%
+    group_by(!!sym("doc_id")) %>%
     group_map(
       ~ pull(.x, {{ pull }}) %>%
         stri_c(collapse = .collapse)

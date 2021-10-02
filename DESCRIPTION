@@ -31,8 +31,10 @@ Imports:
     RcppParallel,
     dplyr (>= 0.8.0),
     purrr,
-    stringi
+    stringi,
+    rlang (>= 0.1.2)
 Suggests:
+    roxygen2,
     testthat (>= 3.0.0)
 SystemRequirements:
     MeCab 0.996 (or mecab-ko 0.9.2) or higher,

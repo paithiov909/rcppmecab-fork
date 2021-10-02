@@ -11,19 +11,11 @@ pack(df, pull = "token", .collapse = " ")
 
 \item{pull}{Column name to be packed into data.frame. Default value is `token`.}
 
-\item{.collapse}{This argument will be passed to \code{stringi::stri_c()}.}
+\item{.collapse}{This argument is passed to \code{stringi::stri_c()}.}
 }
 \value{
 data.frame
 }
 \description{
 Pack Output of POS Tagger
-}
-\examples{
-\dontrun{
-sentence <- c("some UTF-8 texts")
-result <- pos(sentence, format = "data.frame")
-pack(result)
-}
-
 }

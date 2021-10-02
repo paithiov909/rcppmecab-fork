@@ -10,7 +10,7 @@ on:
       - master
 
 jobs:
-  build:
+  check:
     strategy:
       matrix:
         mecab_lang: ['ja', 'ko']
@@ -23,6 +23,9 @@ jobs:
         uses: r-lib/actions/setup-r@v1
         with:
           r-version: ${{ matrix.r-version }}
+      - name: Install libcurl-dev
+        if: ${{ matrix.platform == 'ubuntu-latest' }}
+        run: sudo apt-get install libcurl4-openssl-dev
       - name: Install MeCab for Japanese (Ubuntu)
         if: ${{ matrix.platform == 'ubuntu-latest' && matrix.mecab_lang == 'ja' }}
         run: |
@@ -63,12 +66,17 @@ jobs:
           brew install mecab-ko
           brew install mecab-ko-dic
       - name: Install dependencies
+        env:
+          GITHUB_PAT: ${{ secrets.GITHUB_TOKEN }}
         run: |
-          install.packages(c("remotes", "rcmdcheck"))
+          install.packages(c("remotes", "rcmdcheck", "covr"))
           remotes::install_deps(dependencies = TRUE)
         shell: Rscript {0}
       - name: Check
         env:
           MECAB_LANG: ${{ matrix.mecab_lang }}
         run: rcmdcheck::rcmdcheck(args = c("--no-multiarch", "--no-manual", "--as-cran"), build_args = c("--no-manual", "--no-build-vignettes"), error_on = "error")
+        shell: Rscript {0}
+      - name: Codecov
+        run: covr::codecov()
         shell: Rscript {0}

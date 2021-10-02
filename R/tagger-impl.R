@@ -33,8 +33,8 @@ tagger_impl <- function(functions) {
         mutate(across(where(is.character), ~ reset_encoding(.))) %>%
         mutate(across(where(is.character), ~ na_if(., "*"))) %>%
         mutate(
-          doc_id = as.factor(doc_id),
-          sentence_id = as.factor(sentence_id)
+          doc_id = as.factor(!!sym("doc_id")),
+          sentence_id = as.factor(!!sym("sentence_id"))
         )
     } else {
       if (join == TRUE) {
