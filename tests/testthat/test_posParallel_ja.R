@@ -1,9 +1,5 @@
 test_that("Test if posParallel works on Japanese", {
-  skip_if(
-    is_win_running_on_ci(),
-    " These tests are currently skipped under Windows machines running on CI."
-  )
-  skip_if_not(is_dyn_available(), "No libmecab available. Skip testing.")
+  skip_on_ci()
   skip_if_not(Sys.getenv("MECAB_LANG") == "ja", "MECAB_LANG is not ja. Skip testing.")
   ## posParallel(format = "list", join = TRUE)
   expect_equal(
@@ -34,11 +30,7 @@ test_that("Test if posParallel works on Japanese", {
 })
 
 test_that("Test if posParallel fails", {
-  skip_if(
-    is_win_running_on_ci(),
-    " These tests are currently skipped under Windows machines running on CI."
-  )
-  skip_if_not(is_dyn_available(), "No libmecab available. Skip testing.")
+  skip_on_ci()
   skip_if_not(Sys.getenv("MECAB_LANG") == "ja", "MECAB_LANG is not ja. Skip testing.")
   ## posParallel()
   expect_error(posParallel(list()))

@@ -5,10 +5,8 @@ Authors@R: c(person("Junhewk", "Kim", role = c("aut", "cre"),
                     email = "junhewk.kim@gmail.com"),
              person("Taku", "Kudo", role = c("aut")),
              person("Kohei", "Watanabe", role = c("ctb")),
-             person("Akiru", "Kato", role = c("ctb")))
-Author: Junhewk Kim [aut, cre],
-    Taku Kudo [aut],
-    Nippon Telegraph and Telephone Corporation [cph]
+             person("Akiru", "Kato", role = c("ctb")),
+             person("Nippon Telegraph and Telephone Corporation", role = c("cph")))
 Maintainer: Junhewk Kim <junhewk.kim@gmail.com>
 Description: R package based on 'Rcpp' for 'MeCab': Yet Another Part-of-Speech and Morphological Analyzer.
     The purpose of this package is providing a seamless developing and analyzing environment for CJK texts.
@@ -17,7 +15,6 @@ Description: R package based on 'Rcpp' for 'MeCab': Yet Another Part-of-Speech a
 Depends: R (>= 3.4.0)
 License: GPL
 Encoding: UTF-8
-LazyData: true
 BugReports: https://github.com/junhewk/RcppMeCab/issues
 RoxygenNote: 7.1.2
 Language: en-US
