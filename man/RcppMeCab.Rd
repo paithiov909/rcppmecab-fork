@@ -31,7 +31,7 @@ Useful links:
 
 }
 \author{
-Junhewk Kim Taku Kudo
+Junhewk Kim
 }
 \keyword{Chinese}
 \keyword{Japanese}

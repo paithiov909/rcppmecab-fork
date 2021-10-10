@@ -8,10 +8,15 @@ tagger_impl <- function(functions) {
         stop("The function gets a character vector only.")
       }
     }
-    if (!is_blank(getOption("mecabSysDic"))) sys_dic <- getOption("mecabSysDic")
+    if (is_blank(sys_dic) && .Platform$OS.type == "windows") {
+      sys_dic <- getWinDicDir(Sys.getenv("MECAB_LANG"))
+    }
+    if (!is_blank(getOption("mecabSysDic"))) {
+      sys_dic <- getOption("mecaSysDic")
+    }
     if (!is_blank(getOption("mecabSplit"))) split <- as.logical(getOption("mecabSplit"))
 
-    sentence <- stri_enc_toutf8(sentence)
+    sentence <- stri_omit_na(sentence)
 
     format <- match.arg(format)
     sys_dic <- paste0(sys_dic, collapse = "")

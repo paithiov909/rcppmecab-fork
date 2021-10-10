@@ -9,7 +9,7 @@
 #'
 #' @name RcppMeCab
 #' @docType package
-#' @author Junhewk Kim Taku Kudo
+#' @author Junhewk Kim
 #' @details
 #' This package utilizes 'MeCab' C API and 'Rcpp' codes.
 #'
