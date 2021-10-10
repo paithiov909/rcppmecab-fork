@@ -1,6 +1,15 @@
+# RcppMeCab (development version)
+
++ `format="data.frame"` now returns 'doc_id' and 'sentence_id' as factors.
++ `format="data.frame"` now splits and flattens character vector into sentences with `stringi::stri_split_boundaries(type = "sentence")` before analyze them.
+  + If `options(mecabSplit = FALSE)`, this behavior is skipped.
++ Fix the behavior when input sentence is a named vector (#8).
++ Refactor C++ source for performance.
+
 # RcppMeCab 0.0.1.3
 
-+ Add analytic forms of conjugated morphemes when format == "data.frame"
++ Add analytic forms of conjugated morphemes when `format="data.frame"`
++ A bug fixed: Even when the features of system dictionary is less than 7, `format="data.frame"` works properly.
 
 # RcppMeCab 0.0.1.2
 

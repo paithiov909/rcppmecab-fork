@@ -1,5 +1,6 @@
+## Drop '-Wno-parentheses' from PKG_CXXFLAGS for portability (2021-08-26).
 CXX_STD = CXX11
 PKG_CPPFLAGS += -DBOOST_NO_AUTO_PTR
-PKG_CXXFLAGS = $(shell mecab-config --cflags) -Wno-parentheses
+PKG_CXXFLAGS = $(shell mecab-config --cflags)
 PKG_LIBS += -L$(shell mecab-config --libs-only-L) -lmecab
 PKG_LIBS += $(shell "$(R_HOME)/bin/Rscript" -e "RcppParallel::RcppParallelLibs()")
