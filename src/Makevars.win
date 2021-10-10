@@ -57,4 +57,4 @@ libmecab:
 	@unzip -o ../mecab$(R_ARCH)/mecab.zip "libmecab$(SHLIB_EXT)"
 
 clean:
-	@if [ ! -f ./libmecab$(SHLIB_EXT) ]; then rm libmecab$(SHLIB_EXT); fi
+	@rm libmecab$(SHLIB_EXT)
