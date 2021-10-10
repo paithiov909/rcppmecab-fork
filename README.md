@@ -15,48 +15,50 @@ __Please see [this](README_kr.md) for easy installation and usage examples in Ko
 
 First, install `MeCab` of your language-of-choice.
 
-+ Japanese: `MeCab` from [github](http://taku910.github.io/mecab/)
++ Japanese: `MeCab` from [GitHub](http://taku910.github.io/mecab/)
 + Korean: `MeCab-Ko` from [Bitbucket repository](https://bitbucket.org/eunjeon/mecab-ko)
 + Chinese: `MeCab` and `MeCab Chinese Dic` from [MeCab-Chinese](http://www.52nlp.cn/%E7%94%A8mecab%E6%89%93%E9%80%A0%E4%B8%80%E5%A5%97%E5%AE%9E%E7%94%A8%E7%9A%84%E4%B8%AD%E6%96%87%E5%88%86%E8%AF%8D%E7%B3%BB%E7%BB%9F%E4%B8%89%EF%BC%9Amecab-chinese)
 
 Second, you can install RcppMeCab from CRAN with:
 
-```
-install.packages("RcppMeCab") # build from source
-# install.packages("devtools")
-install_github("junhewk/RcppMeCab") # install developmental version
+```r
+install.packages("RcppMeCab")
 ```
 
 ### Windows
 
-You should set the language you want to use for the analysis with the environment variable `MECAB_LANG`. The default value is `ko` and if you want to analyze Japanese or Chinese, please set it as `ja` before install the package.
+You should set the language you want to use for the analysis with the environment variable `MECAB_LANG`. The default value is `ko` and if you want to analyze Japanese, please set it as `Sys.setenv(MECAB_LANG = 'ja')` before use the package.
 
+```r
+# install CRAN version for Korean
+install.packages("RcppMeCab")
 ```
-install.packages("RcppMeCab") # for installing Korean version
 
-# or, install for Japanese
-Sys.setenv(MECAB_LANG = 'ja') # for installing Japanese developmental version
-install.packages("RcppMeCab", type="source") # build from source
+Currently, `MECAB_LANG='ja'` does not work properly on CRAN release. So, if you would like to use RcppMeCab with Japanese, please use the developmental version.
 
-# install.packages("devtools")
-install_github("junhewk/RcppMeCab") # install developmental version
+```r
+# install developmental version from source
+if (!requireNamespace("remotes")) install.packages("remotes")
+remotes::install_github("junhewk/RcppMeCab") 
 ```
 
 For analyzing, you also need MeCab binary and dictionary.
 
-For Korean:
+Note that the MeCab library built for Windows does not have compatibility with both 32-bit R and 64-bit R. Because of this, if you build and install RcppMeCab from source package, it may be helpful you to use some build options that '--no-multiarch' and/or '--no-test-load'.
 
-Install [mecab-ko-msvc](https://github.com/Pusnow/mecab-ko-msvc) and [mecab-ko-dic-msvc](https://github.com/Pusnow/mecab-ko-dic-msvc) up to your 32-bit or 64-bit Windows version in `C:\mecab`. Provide directory location to `RcppMeCab` function.
+#### For Korean:
 
-For Japanese:
+Install [mecab-ko-msvc](https://github.com/Pusnow/mecab-ko-msvc) and [mecab-ko-dic-msvc](https://github.com/Pusnow/mecab-ko-dic-msvc) up to your 32-bit or 64-bit Windows version in `C:\mecab`. Then, add that directory to the PATH environment variable, and provide dictionary location to `RcppMeCab` function.
 
-Install [mecab binary](https://drive.google.com/uc?export=download&id=0B4y35FiV1wh7WElGUGt6ejlpVXc). Provide directory location to `RcppMeCab` function. For example: `pos(sentence, sys_dic = "C:/PROGRA~2/mecab/dic/ipadic")`
+#### For Japanese:
+
+Install mecab binary [built for 32bit](https://drive.google.com/uc?export=download&id=0B4y35FiV1wh7WElGUGt6ejlpVXc) and/or [built for 64bit](https://github.com/ikegami-yukino/mecab/releases/tag/v0.996.2). Then, add the `C:/PROGRA~2/mecab/bin/` (32bit) or `C:/PROGRA~1/mecab/bin` (64bit) directory to the PATH environment variables, and provide dictionary location to `RcppMeCab` function if necessary.
 
 ## Usage
 
 This package has `pos` and `posParallel` function.
 
-```
+```r
 pos(sentence) # returns list, sentence will present on the names of the list
 pos(sentence, join = FALSE) # for yielding morphemes only (tags will be given on the vector names)
 pos(sentence, format = "data.frame") # the result will returned as a data frame format

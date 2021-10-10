@@ -9,9 +9,17 @@
 ##  Based on Makefile.win of Rblpapi
 ##  https://github.com/Rblp/Rblpapi/blob/master/src/Makevars.win
 
-## Confirm there is a user definition of an environment variable MECAB_LANG
-ifneq "$(MECAB_LANG)" "ja"
-	MECAB_LANG = ko
+## Confirm the environment variable that defining where the 'libmecab.dll' is placed.
+## i.e. if you using the Korean mecab, MECAB_LIBS goes to '/mecab',
+## or (if you using the Japanese mecab), MECAB_LIBS goes to somewhere like '/PROGRA~2/mecab/bin'.
+ifeq "$(MECAB_LIBS)" ""
+        MECAB_LIBS = .
+endif
+
+ifeq "$(WIN)" "64"
+        MECAB_URL = https://github.com/shogo82148/mecab/releases/download/v0.996.6/mecab-msvc-x64-0.996.6.zip
+else
+        MECAB_URL = https://github.com/shogo82148/mecab/releases/download/v0.996.6/mecab-msvc-x86-0.996.6.zip
 endif
 
 ## Confirm the environment variable that defining where the 'libmecab.dll' is placed.
@@ -23,7 +31,7 @@ endif
 ## Because of this, if you build and install RcppMeCab from source package,
 ## you would ensure to use some build options like that '--no-multiarch'.
 ifeq "$(MECAB_LIBS)" ""
-	MECAB_LIBS = /mecab
+        MECAB_LIBS = /mecab
 endif
 
 ## Compiler / linker flags with RcppParallel library
@@ -32,9 +40,9 @@ endif
 CXX_STD = CXX11
 PKG_CPPFLAGS += -I../inst/include -DBOOST_NO_AUTO_PTR
 PKG_CXXFLAGS += -DRCPP_PARALLEL_USE_TBB=1 -DDLL_IMPORT -DSTRICT_R_HEADERS
-PKG_LIBS += -L$(MECAB_LIBS) $(shell "$(R_HOME)/bin$(R_ARCH_BIN)/Rscript.exe" -e "RcppParallel::RcppParallelLibs()") -lm -llibmecab
+PKG_LIBS += -L$(MECAB_LIBS) -llibmecab $(shell "$(R_HOME)/bin$(R_ARCH_BIN)/Rscript.exe" -e "RcppParallel::RcppParallelLibs()")
 
-all: libmecab $(SHLIB)
+all: libmecab $(SHLIB) clean
 
 ## Ensure the build succeed even if there is no 'libmecab.dll'.
 ## -----
@@ -44,7 +52,9 @@ all: libmecab $(SHLIB)
 ## -----
 ## Note that using RcppMeCab still requires system dictionaries properly installed.
 libmecab:
-	@tar xfz ../tools/mecab/win$(R_ARCH)/mecab$(WIN)_$(MECAB_LANG).tar.gz
-	@if [ ! -d $(MECAB_LIBS) ]; then mkdir -p $(MECAB_LIBS); fi
-	@if [ ! -f $(MECAB_LIBS)/libmecab$(SHLIB_EXT) ]; then cp libmecab$(SHLIB_EXT) $(MECAB_LIBS); fi
-	@rm libmecab$(SHLIB_EXT)
+	@if [ ! -d ../mecab$(R_ARCH) ]; then mkdir -p ../mecab$(R_ARCH); fi
+	`"$(R_HOME)/bin$(R_ARCH_BIN)/Rscript.exe" -e "download.file(url='$(MECAB_URL)', destfile='../mecab$(R_ARCH)/mecab.zip', quiet=TRUE)"`
+	@unzip -o ../mecab$(R_ARCH)/mecab.zip "libmecab$(SHLIB_EXT)"
+
+clean:
+	@if [ ! -f ./libmecab$(SHLIB_EXT) ]; then rm libmecab$(SHLIB_EXT); fi
