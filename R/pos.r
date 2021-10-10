@@ -46,8 +46,8 @@ pos <- function(sentence, join = TRUE, format = c("list", "data.frame"), sys_dic
       stop("The function gets a character vector only.")
     }
   }
-
-  if (!is.null(getOption("mecabSysDic")) && !sys_dic == "") sys_dic = getOption("mecabSysDic")
+  if (sys_dic == "" && .Platform$OS.type == "windows") sys_dic <- getWinDicDir(Sys.getenv("MECAB_LANG"))
+  if (!is.null(getOption("mecabSysDic"))) sys_dic <- getOption("mecabSysDic")
 
   format = match.arg(format)
 

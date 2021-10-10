@@ -54,7 +54,8 @@ posParallel <- function(sentence, join = TRUE, format = c("list", "data.frame"),
 
   format = match.arg(format)
 
-  if (!is.null(getOption("mecabSysDic")) && !sys_dic == "") sys_dic = getOption("mecabSysDic")
+  if (sys_dic == "" && .Platform$OS.type == "windows") sys_dic <- getWinDicDir(Sys.getenv("MECAB_LANG"))
+  if (!is.null(getOption("mecabSysDic"))) sys_dic <- getOption("mecabSysDic")
 
   if (format == "data.frame") {
     result <- posParallelDFRcpp(sentence, sys_dic, user_dic)
