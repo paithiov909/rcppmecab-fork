@@ -34,7 +34,7 @@ PKG_CPPFLAGS += -I../inst/include -DBOOST_NO_AUTO_PTR
 PKG_CXXFLAGS += -DRCPP_PARALLEL_USE_TBB=1 -DDLL_IMPORT -DSTRICT_R_HEADERS -Wno-parentheses
 PKG_LIBS += -L$(MECAB_LIBS) -llibmecab $(shell "$(R_HOME)/bin$(R_ARCH_BIN)/Rscript.exe" -e "RcppParallel::RcppParallelLibs()")
 
-all: libmecab $(SHLIB)
+all: libmecab $(SHLIB) clean
 
 ## target to ensure tar.gz files get unpacked
 ## the opening '@' ensures operations are executed 'quietly'
@@ -43,3 +43,6 @@ libmecab:
 	@if [ ! -d ../mecab$(R_ARCH) ]; then mkdir -p ../mecab$(R_ARCH); fi
 	`"$(R_HOME)/bin$(R_ARCH_BIN)/Rscript.exe" -e "download.file(url='$(MECAB_URL)', destfile='../mecab$(R_ARCH)/mecab.zip', quiet=TRUE)"`
 	@unzip -o ../mecab$(R_ARCH)/mecab.zip "libmecab$(SHLIB_EXT)"
+
+clean:
+	@rm libmecab$(SHLIB_EXT)
