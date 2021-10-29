@@ -52,7 +52,7 @@ Install [mecab-ko-msvc](https://github.com/Pusnow/mecab-ko-msvc) and [mecab-ko-d
 
 #### For Japanese:
 
-Install mecab binary [built for 32bit](https://drive.google.com/uc?export=download&id=0B4y35FiV1wh7WElGUGt6ejlpVXc) and/or [built for 64bit](https://github.com/ikegami-yukino/mecab/releases/tag/v0.996.2). Then, add the `C:/PROGRA~2/mecab/bin/` (32bit) or `C:/PROGRA~1/mecab/bin` (64bit) directory to the PATH environment variables, and provide dictionary location to RcppMeCab function if necessary.
+Install mecab binary [built for 32-bit](https://drive.google.com/uc?export=download&id=0B4y35FiV1wh7WElGUGt6ejlpVXc) and/or [built for 64-bit](https://github.com/ikegami-yukino/mecab/releases/tag/v0.996.2). Then, add the `C:\PROGRA~2\mecab\bin\` (32-bit) or `C:\PROGRA~1\mecab\bin` (64-bit) directory to the PATH environment variables, and provide dictionary location to RcppMeCab function if necessary.
 
 ## Usage
 

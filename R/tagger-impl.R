@@ -35,11 +35,11 @@ tagger_impl <- function(functions) {
             functions$df(vec, sys_dic, user_dic)
           )
         }) %>%
-        mutate(across(where(is.character), ~ reset_encoding(.))) %>%
-        mutate(across(where(is.character), ~ na_if(., "*"))) %>%
+        mutate_if(is.character, ~ reset_encoding(.)) %>%
+        mutate_if(is.character, ~ na_if(., "*")) %>%
         mutate(
-          doc_id = as.factor(!!sym("doc_id")),
-          sentence_id = as.factor(!!sym("sentence_id"))
+          doc_id = as.factor(.data$doc_id),
+          sentence_id = as.factor(.data$sentence_id)
         )
     } else {
       if (join == TRUE) {
