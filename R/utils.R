@@ -21,10 +21,10 @@ isBlank <- function(x, trim = TRUE, ...) {
     if (is.null(x)) {
       return(TRUE)
     }
-    case_when(
+    dplyr::case_when(
       is.na(x) ~ TRUE,
       is.nan(x) ~ TRUE,
-      is.character(x) && nchar(ifelse(trim, stri_trim(x), x)) == 0 ~ TRUE,
+      is.character(x) && nchar(ifelse(trim, stringi::stri_trim(x), x)) == 0 ~ TRUE,
       TRUE ~ FALSE
     )
   } else {
@@ -48,9 +48,9 @@ is_blank <- isBlank
 #' @export
 is_dyn_available <- function() {
   if (.Platform$OS.type == "windows") {
-    return(!is_blank(Sys.which(stri_c("libmecab", .Platform$dynlib.ext))))
+    return(!is_blank(Sys.which(paste0("libmecab", .Platform$dynlib.ext))))
   } else {
-    return(!is_blank(Sys.which(stri_c("mecab"))))
+    return(!is_blank(Sys.which(paste0("mecab"))))
   }
 }
 
@@ -58,8 +58,27 @@ is_dyn_available <- function() {
 #' @noRd
 #' @keywords internal
 reset_encoding <- function(vec, enc = "UTF-8") {
-  sapply(vec, function(elem) {
+  purrr::map_chr(vec, function(elem) {
     Encoding(elem) <- enc
     return(elem)
-  }, USE.NAMES = FALSE)
+  })
+}
+
+#' Pack Output of POS Tagger
+#'
+#' @param df Output of \code{pos(format = "data.frame")} or \code{posParallel(format = "data.frame")}.
+#' @param pull Column name to be packed into data.frame. Default value is `token`.
+#' @param .collapse This argument is passed to \code{stringi::stri_c()}.
+#' @return data.frame
+#'
+#' @export
+pack <- function(df, pull = "token", .collapse = " ") {
+  res <- df %>%
+    dplyr::group_by(.data$doc_id) %>%
+    dplyr::group_map(
+      ~ dplyr::pull(.x, {{ pull }}) %>%
+        stringi::stri_c(collapse = .collapse)
+    ) %>%
+    purrr::imap_dfr(~ data.frame(doc_id = .y, text = .x))
+  return(res)
 }

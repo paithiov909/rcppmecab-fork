@@ -5,8 +5,6 @@
 #' @useDynLib RcppMeCab, .registration=TRUE
 ## --------------------------------------- ##
 #' @import dplyr
-#' @import purrr
-#' @importFrom stringi stri_omit_na stri_trim stri_c stri_split_boundaries
 ## usethis namespace: end
 NULL
 
