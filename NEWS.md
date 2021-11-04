@@ -5,6 +5,7 @@
   + If `options(mecabSplit = FALSE)`, this behavior is skipped.
 + Fix the behavior when input sentence is a named vector (#8).
 + Refactor C++ source for performance.
++ Add `pack` function.
 
 # RcppMeCab 0.0.1.3
 

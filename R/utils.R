@@ -1,3 +1,11 @@
+#' @noRd
+#' @keywords internal
+getWinDicDir <- function(lang) {
+  ifelse(identical(lang, "ja"),
+         "C:/PROGRA~2/mecab/dic/ipadic",
+         "C:/mecab/mecab-ko-dic")
+}
+
 #' Check if scalars are blank
 #'
 #' @param x Object to check its emptiness.
@@ -13,10 +21,10 @@ isBlank <- function(x, trim = TRUE, ...) {
     if (is.null(x)) {
       return(TRUE)
     }
-    case_when(
+    dplyr::case_when(
       is.na(x) ~ TRUE,
       is.nan(x) ~ TRUE,
-      is.character(x) && nchar(ifelse(trim, stri_trim(x), x)) == 0 ~ TRUE,
+      is.character(x) && nchar(ifelse(trim, stringi::stri_trim(x), x)) == 0 ~ TRUE,
       TRUE ~ FALSE
     )
   } else {
@@ -50,10 +58,10 @@ is_dyn_available <- function() {
 #' @noRd
 #' @keywords internal
 reset_encoding <- function(vec, enc = "UTF-8") {
-  sapply(vec, function(elem) {
+  purrr::map_chr(vec, function(elem) {
     Encoding(elem) <- enc
     return(elem)
-  }, USE.NAMES = FALSE)
+  })
 }
 
 #' Pack Output of POS Tagger
@@ -66,11 +74,11 @@ reset_encoding <- function(vec, enc = "UTF-8") {
 #' @export
 pack <- function(df, pull = "token", .collapse = " ") {
   res <- df %>%
-    group_by(!!sym("doc_id")) %>%
-    group_map(
-      ~ pull(.x, {{ pull }}) %>%
-        stri_c(collapse = .collapse)
+    dplyr::group_by(.data$doc_id) %>%
+    dplyr::group_map(
+      ~ dplyr::pull(.x, {{ pull }}) %>%
+        stringi::stri_c(collapse = .collapse)
     ) %>%
-    imap_dfr(~ data.frame(doc_id = .y, text = .x))
+    purrr::imap_dfr(~ data.frame(doc_id = .y, text = .x))
   return(res)
 }
