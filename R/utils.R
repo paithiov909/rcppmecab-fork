@@ -2,8 +2,9 @@
 #' @keywords internal
 getWinDicDir <- function(lang) {
   ifelse(identical(lang, "ja"),
-         "C:/PROGRA~2/mecab/dic/ipadic",
-         "C:/mecab/mecab-ko-dic")
+    "C:/PROGRA~2/mecab/dic/ipadic",
+    "C:/mecab/mecab-ko-dic"
+  )
 }
 
 #' Check if scalars are blank
@@ -77,8 +78,10 @@ pack <- function(df, pull = "token", .collapse = " ") {
     dplyr::group_by(.data$doc_id) %>%
     dplyr::group_map(
       ~ dplyr::pull(.x, {{ pull }}) %>%
-        stringi::stri_c(collapse = .collapse)
+        stringi::stri_join(collapse = .collapse) %>%
+        purrr::set_names(.y$doc_id)
     ) %>%
+    purrr::flatten_chr() %>%
     purrr::imap_dfr(~ data.frame(doc_id = .y, text = .x))
   return(res)
 }

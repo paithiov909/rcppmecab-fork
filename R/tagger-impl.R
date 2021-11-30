@@ -16,20 +16,25 @@ tagger_impl <- function(functions) {
     }
     if (!is_blank(getOption("mecabSplit"))) split <- as.logical(getOption("mecabSplit"))
 
-    sentence <- stringi::stri_enc_toutf8(sentence)
+    # keep names
+    nm <- names(sentence)
+    if (identical(nm, NULL)) {
+      nm <- seq_along(sentence)
+    }
+    sentence <- stringi::stri_enc_toutf8(sentence) %>%
+      purrr::set_names(nm)
 
     format <- rlang::arg_match(format)
     sys_dic <- paste0(sys_dic, collapse = "")
     user_dic <- paste0(user_dic, collapse = "")
 
     if (format == "data.frame") {
-      if (identical(split, TRUE)) {
-        sentence <- stringi::stri_split_boundaries(sentence, type = "sentence")
-      } else {
-        sentence <- as.vector(sentence, mode = "list")
-      }
       result <-
         purrr::imap_dfr(sentence, function(vec, doc_id) {
+          if (identical(split, TRUE)) {
+            vec <- stringi::stri_split_boundaries(vec, type = "sentence") %>%
+              unlist()
+          }
           dplyr::bind_cols(
             data.frame(doc_id = doc_id),
             functions$df(vec, sys_dic, user_dic)
@@ -46,7 +51,7 @@ tagger_impl <- function(functions) {
         result <-
           functions$join(sentence, sys_dic, user_dic) %>%
           purrr::map(reset_encoding) %>%
-          purrr::set_names(sentence)
+          purrr::set_names(nm)
       } else {
         result <-
           functions$base(sentence, sys_dic, user_dic) %>%
@@ -54,7 +59,7 @@ tagger_impl <- function(functions) {
             names(elem) <- reset_encoding(names(elem))
             reset_encoding(elem)
           }) %>%
-          purrr::set_names(sentence)
+          purrr::set_names(nm)
       }
     }
     return(result)
