@@ -30,7 +30,7 @@ PKG_CPPFLAGS = -I../inst/include -DBOOST_NO_AUTO_PTR
 PKG_CXXFLAGS = -DRCPP_PARALLEL_USE_TBB=1 -DDLL_IMPORT -DSTRICT_R_HEADERS
 PKG_LIBS = -L$(MECAB_LIBS) -llibmecab $(shell "$(R_HOME)/bin$(R_ARCH_BIN)/Rscript.exe" -e "RcppParallel::RcppParallelLibs()")
 
-all: libmecab $(SHLIB) clean
+all: libmecab $(SHLIB)
 
 ## Ensure the build succeed even if there is no 'libmecab.dll'.
 ## -----
