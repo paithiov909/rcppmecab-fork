@@ -19,7 +19,6 @@ Language: en-US
 LinkingTo:
     Rcpp,
     RcppParallel,
-    RcppThread,
     BH
 Imports:
     Rcpp,
