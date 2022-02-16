@@ -4,7 +4,8 @@
 #' @importFrom RcppParallel RcppParallelLibs
 #' @useDynLib RcppMeCab, .registration=TRUE
 ## --------------------------------------- ##
-#' @import dplyr
+#' @importFrom rlang expr enquo enquos sym syms .data := as_name as_label
+#' @importFrom dplyr %>%
 ## usethis namespace: end
 NULL
 

@@ -65,23 +65,22 @@ reset_encoding <- function(vec, enc = "UTF-8") {
   })
 }
 
-#' Pack Output of POS Tagger
+#' Pack prettified data.frame of tokens
 #'
-#' @param df Output of \code{pos(format = "data.frame")} or \code{posParallel(format = "data.frame")}.
-#' @param pull Column name to be packed into data.frame. Default value is `token`.
-#' @param .collapse This argument is passed to \code{stringi::stri_c()}.
-#' @return data.frame
-#'
+#' @inherit audubon::pack description return details sections seealso
+#' @inheritParams audubon::pack
 #' @export
-pack <- function(df, pull = "token", .collapse = " ") {
-  res <- df %>%
-    dplyr::group_by(.data$doc_id) %>%
-    dplyr::group_map(
-      ~ dplyr::pull(.x, {{ pull }}) %>%
-        stringi::stri_join(collapse = .collapse) %>%
-        purrr::set_names(.y$doc_id)
-    ) %>%
-    purrr::flatten_chr() %>%
-    purrr::imap_dfr(~ data.frame(doc_id = .y, text = .x))
-  return(res)
+pack <- function(df, n = 1L, pull = "token", sep = "-", .collapse = " ") {
+  audubon::pack(df, n, pull = pull, sep = sep, .collapse = .collapse)
 }
+
+#' Pipe operator
+#'
+#' Reexported pipe originally from magrittr's pipe operator.
+#'
+#' @name %>%
+#' @rdname pipe
+#' @param lhs A value or the magrittr placeholder.
+#' @param rhs A function call using the magrittr semantics.
+#' @export
+NULL
