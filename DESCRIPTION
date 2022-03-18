@@ -37,5 +37,6 @@ Encoding: UTF-8
 Language: en-US
 RoxygenNote: 7.1.2
 SystemRequirements:
-    MeCab 0.996 (or mecab-ko 0.9.2) or higher,
     C++11
+    GNU make,
+    MeCab 0.996 (or mecab-ko 0.9.2) or higher
