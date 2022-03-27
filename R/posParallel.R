@@ -57,6 +57,6 @@ posParallel <- function(sentence, join = TRUE, format = c("list", "data.frame"),
 }
 
 #' Alias of `posParallel`
-#' @noRd
+#' @inherit posParallel
 #' @export
 pos_parallel <- posParallel
