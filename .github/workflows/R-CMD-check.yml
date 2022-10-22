@@ -14,7 +14,7 @@ jobs:
     strategy:
       matrix:
         mecab_lang: ['ja', 'ko']
-        platform: [ubuntu-latest, windows-latest]
+        platform: [ubuntu-latest]
         r-version: ['release']
     runs-on: ${{ matrix.platform }}
     steps:

@@ -3,6 +3,14 @@
 
 # RcppMeCab
 
+<!-- badges: start -->
+
+[![RcppMeCab status
+badge](https://paithiov909.r-universe.dev/badges/RcppMeCab)](https://paithiov909.r-universe.dev)
+![GitHub](https://img.shields.io/github/license/paithiov909/RcppMeCab)
+[![R-CMD-check](https://github.com/paithiov909/RcppMeCab/workflows/R-CMD-check/badge.svg)](https://github.com/paithiov909/RcppMeCab/actions)
+<!-- badges: end -->
+
 > This repo is a fork from
 > [junhewk/RcppMeCab](https://github.com/junhewk/RcppMeCab).
 
@@ -19,14 +27,24 @@ This package has `pos` and `posParallel` function.
 ``` r
 sentence <- "雨にも負けず、風にも負けず"
 
-pos(sentence) # returns list, sentence will present on the names of the list
+## テキストだけ与える場合、デフォルトの戻り値はnamed list of character vectors.
+## リストの各要素は、表層形（surface form）と素性情報の1番目（IPA辞書では「品詞」）を'/'で区切ってつなげた文字列ベクトルになる。
+pos(sentence) # returns list
 #> $`1`
 #>  [1] "雨/名詞"   "に/助詞"   "も/助詞"   "負け/動詞" "ず/助動詞" "、/記号"  
 #>  [7] "風/名詞"   "に/助詞"   "も/助詞"   "負け/動詞" "ず/助動詞"
+
+## 'join = FALSE'を指定すると、戻り値はnamed list of named character vectorsになる。
+## Neologd辞書などでは収録されている語彙そのものに'/'が含まれていることがあるため、使用ケースによって使い分けるとよい。
 pos(sentence, join = FALSE) # for yielding morphemes only (tags will be given on the vector names)
 #> $`1`
 #>   名詞   助詞   助詞   動詞 助動詞   記号   名詞   助詞   助詞   動詞 助動詞 
 #>   "雨"   "に"   "も" "負け"   "ず"   "、"   "風"   "に"   "も" "負け"   "ず"
+
+## 'format = data.frame'にすると、戻り値は以下のようなデータフレームになる。
+## pos列・subtype列は素性情報の1~2番目（IPA辞書では「品詞」と「品詞細分類1」）、
+## analytic列は素性情報の8番目（IPA辞書の「読み」）だが、
+## 未知語で推定されない素性だった場合などには'NA_character_'が含まれることがある。
 pos(sentence, format = "data.frame") # the result will returned as a data frame format
 #>    doc_id sentence_id token_id token    pos subtype analytic
 #> 1       1           1        1    雨   名詞    一般     アメ
@@ -40,6 +58,7 @@ pos(sentence, format = "data.frame") # the result will returned as a data frame 
 #> 9       1           1        9    も   助詞  係助詞       モ
 #> 10      1           1       10  負け   動詞    自立     マケ
 #> 11      1           1       11    ず 助動詞    <NA>       ズ
+
 posParallel(sentence) # parallelized version uses more memory, but much faster than the loop in single threading
 #> $`1`
 #>  [1] "雨/名詞"   "に/助詞"   "も/助詞"   "負け/動詞" "ず/助動詞" "、/記号"  
