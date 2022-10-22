@@ -1,8 +1,7 @@
-^renv$
-^renv\.lock$
 ^.*\.Rproj$
 ^\.Rproj\.user$
 ^\.github$
 ^mecab$
 ^cran-comments\.md$
-README_kr.md
+^LICENSE\.md$
+^README\.Rmd$

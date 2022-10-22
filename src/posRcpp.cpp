@@ -1,4 +1,3 @@
-// [[Rcpp::plugins(cpp11)]]
 // [[Rcpp::depends(BH)]]
 
 #define R_NO_REMAP
@@ -8,7 +7,7 @@
 #include <Rcpp.h>
 #include <boost/algorithm/string.hpp>
 #include <boost/tuple/tuple.hpp>
-#include "../inst/include/mecab.h"
+#include "mecab.h"
 
 using namespace Rcpp;
 

@@ -12,5 +12,5 @@ NULL
 #' @noRd
 #' @param libpath libpath
 .onUnload <- function(libpath) {
-  library.dynam.unload("RcppMeCab", libpath)
+  # library.dynam.unload("RcppMeCab", libpath)
 }

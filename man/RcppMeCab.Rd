@@ -26,7 +26,7 @@ This package utilizes 'MeCab' C API and 'Rcpp' codes.
 \seealso{
 Useful links:
 \itemize{
-  \item Report bugs at \url{https://github.com/junhewk/RcppMeCab/issues}
+  \item Report bugs at \url{https://github.com/paithiov909/RcppMeCab/issues}
 }
 
 }

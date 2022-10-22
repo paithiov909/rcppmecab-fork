@@ -1,4 +1,3 @@
-// [[Rcpp::plugins(cpp11)]]
 // [[Rcpp::depends(RcppParallel, BH)]]
 
 #define R_NO_REMAP
@@ -9,7 +8,7 @@
 #include <RcppParallel.h>
 #include <boost/algorithm/string.hpp>
 #include <boost/tuple/tuple.hpp>
-#include "../inst/include/mecab.h"
+#include "mecab.h"
 
 // structs for using in tbb::parallel_for
 namespace TextParser {

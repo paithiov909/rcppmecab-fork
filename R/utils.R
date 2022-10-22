@@ -1,12 +1,3 @@
-#' @noRd
-#' @keywords internal
-getWinDicDir <- function(lang) {
-  ifelse(identical(lang, "ja"),
-    "C:/PROGRA~2/mecab/dic/ipadic",
-    "C:/mecab/mecab-ko-dic"
-  )
-}
-
 #' Check if scalars are blank
 #'
 #' @param x Object to check its emptiness.
@@ -41,20 +32,6 @@ isBlank <- function(x, trim = TRUE, ...) {
 #' @export
 is_blank <- isBlank
 
-#' Check if mecab or its dynamic libarary is available
-#'
-#' @return Logical.
-#'
-#' @keywords internal
-#' @export
-is_dyn_available <- function() {
-  if (.Platform$OS.type == "windows") {
-    return(!is_blank(Sys.which(paste0("libmecab", .Platform$dynlib.ext))))
-  } else {
-    return(!is_blank(Sys.which(paste0("mecab"))))
-  }
-}
-
 #' Format Character Vector
 #' @noRd
 #' @keywords internal
@@ -64,14 +41,6 @@ reset_encoding <- function(vec, enc = "UTF-8") {
     return(elem)
   })
 }
-
-#' Pack prettified data.frame of tokens
-#'
-#' @inherit audubon::pack description return details sections seealso
-#' @inheritParams audubon::pack
-#' @importFrom audubon pack
-#' @export
-pack <- audubon::pack
 
 #' Pipe operator
 #'
