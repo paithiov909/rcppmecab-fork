@@ -23,9 +23,31 @@ badge](https://paithiov909.r-universe.dev/badges/RcppMeCab)](https://paithiov909
 [![R-CMD-check](https://github.com/paithiov909/RcppMeCab/workflows/R-CMD-check/badge.svg)](https://github.com/paithiov909/RcppMeCab/actions)
 <!-- badges: end -->
 
-> This repo is a fork from [junhewk/RcppMeCab](https://github.com/junhewk/RcppMeCab).
+> This repo is a fork from [junhewk/RcppMeCab](https://github.com/junhewk/RcppMeCab)
 
 This package, RcppMeCab, is an 'Rcpp' wrapper for the part-of-speech morphological analyzer MeCab. It supports native utf-8 encoding in C++ code and CJK (Chinese, Japanese, and Korean) MeCab library. This package fully utilizes the power Rcpp brings R computation to analyze texts faster.
+
+## Installation
+
+```r
+# Enable repository from paithiov909
+options(repos = c(
+  paithiov909 = "https://paithiov909.r-universe.dev",
+  CRAN = "https://cloud.r-project.org"))
+
+# Download and install gibasa in R
+install.packages("RcppMeCab")
+
+# Or build from source package
+Sys.setenv(MECAB_DEFAULT_RC = "/fullpath/to/your/mecabrc") # if necessary
+remotes::install_github("paithiov909/RcppMeCab")
+```
+
+To use this package requires the MeCab library and its dictionary installed and available.
+
+In case using Linux or OSX, you can install them with their package managers, or build and install from the source by yourself.
+
+In case using Windows, use installer [built for 32bit](https://drive.google.com/uc?export=download&id=0B4y35FiV1wh7WElGUGt6ejlpVXc) or [built for 64bit](https://github.com/ikegami-yukino/mecab/releases/tag/v0.996.2).
 
 ## Usage
 
@@ -51,8 +73,14 @@ pos(sentence, format = "data.frame") # the result will returned as a data frame 
 posParallel(sentence) # parallelized version uses more memory, but much faster than the loop in single threading
 ```
 
+both two funtions can get same arguments:
+
 + sentence: a text for analyzing
 + join: If it gets TRUE, output form is (morpheme/tag). If it gets FALSE, output form is (morpheme) + tag in attribute.
 + format: The default is a list. If you set this as `"data.frame"`, the function will return the result in a data frame format.
 + sys_dic: a directory in which `dicrc` file is located, default value is `NULL` or you can set your default value using `options(mecabSysDic = "/path/to/your/system_dictionary")` 
 + user_dic: a user dictionary file compiled by `mecab_dict_index`, default value is also ""
+
+## License
+
+GPL (>=3)

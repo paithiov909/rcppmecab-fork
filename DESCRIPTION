@@ -38,7 +38,7 @@ Config/reticulate:
   list(
     packages = list(
       list(package = "mecab-ko-dic"),
-      list(pacakge = "ipadic-py")
+      list(pacakge = "ipadic")
     )
   )
 Encoding: UTF-8
