@@ -28,7 +28,7 @@ options(repos = c(
   paithiov909 = "https://paithiov909.r-universe.dev",
   CRAN = "https://cloud.r-project.org"))
 
-# Download and install gibasa in R
+# Download and install RcppMeCab in R
 install.packages("RcppMeCab")
 
 # Or build from source package
