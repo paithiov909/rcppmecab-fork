@@ -105,6 +105,19 @@ both two funtions can get same arguments:
 - user_dic: a user dictionary file compiled by `mecab_dict_index`,
   default value is also “”
 
+## Changes from the origin
+
+- When `format="data.frame"`, the function returns ‘doc_id’ and
+  ‘sentence_id’ as factors.
+- When `format="data.frame"` the function splits and flattens character
+  vector into sentences with
+  `stringi::stri_split_boundaries(type = "sentence")` before analyze
+  them.
+  - If `options(mecabSplit = FALSE)`, this behavior is skipped.
+- Fixed the behavior when input sentence is an unnamed vector.
+- Refactored C++ source for performance.
+- Included MeCab source code in package src directory for installation.
+
 ## License
 
 GPL (\>=3)

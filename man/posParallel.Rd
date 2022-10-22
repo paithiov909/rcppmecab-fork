@@ -2,7 +2,6 @@
 % Please edit documentation in R/posParallel.R
 \name{posParallel}
 \alias{posParallel}
-\alias{pos_parallel}
 \title{parallel version of part-of-speech tagger}
 \usage{
 posParallel(

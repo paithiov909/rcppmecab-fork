@@ -42,7 +42,6 @@
 #' pos(sentence, sys_dic = "/usr/local/lib/mecab/dic/mecab-ipadic-neologd/")
 #' }
 #'
-#' @aliases pos_parallel
 #' @export
 posParallel <- function(sentence, join = TRUE, format = c("list", "data.frame"), sys_dic = "", user_dic = "") {
   tagger <-

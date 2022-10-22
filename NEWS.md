@@ -1,11 +1,11 @@
-# RcppMeCab (development version)
+# RcppMeCab 0.0.2
 
-+ `format="data.frame"` now returns 'doc_id' and 'sentence_id' as factors.
-+ `format="data.frame"` now splits and flattens character vector into sentences with `stringi::stri_split_boundaries(type = "sentence")` before analyze them.
++ When `format="data.frame"`, the function returns 'doc_id' and 'sentence_id' as factors.
++ When `format="data.frame"` the function splits and flattens character vector into sentences with `stringi::stri_split_boundaries(type = "sentence")` before analyze them.
   + If `options(mecabSplit = FALSE)`, this behavior is skipped.
-+ Fix the behavior when input sentence is a named vector (#8).
-+ Refactor C++ source for performance.
-+ Add `pack` function.
++ Fixed the behavior when input sentence is an unnamed vector.
++ Refactored C++ source for performance.
++ Included MeCab source code in package src directory for installation.
 
 # RcppMeCab 0.0.1.3
 
