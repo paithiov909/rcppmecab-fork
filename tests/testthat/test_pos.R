@@ -1,6 +1,7 @@
-test_that("Test if pos works on Japanese", {
-  skip_on_ci()
-  skip_if_not(Sys.getenv("MECAB_LANG") == "ja", "MECAB_LANG is not ja. Skip testing.")
+skip_on_cran()
+
+test_that("pos works on Japanese", {
+  skip_if(Sys.getenv("MECAB_LANG") != "ja")
   ## pos(format = "list", join = TRUE)
   expect_equal(
     pos(
@@ -29,10 +30,7 @@ test_that("Test if pos works on Japanese", {
   )
 })
 
-test_that("Test if pos fails", {
-  skip_on_ci()
-  skip_if_not(Sys.getenv("MECAB_LANG") == "ja", "MECAB_LANG is not ja. Skip testing.")
-  ## pos()
+test_that("pos fails", {
   expect_error(pos(list()))
   expect_error(pos(factor()))
 })

@@ -9,6 +9,9 @@
 ## usethis namespace: end
 NULL
 
+#' @importFrom utils globalVariables
+utils::globalVariables("where")
+
 #' @noRd
 #' @param libpath libpath
 .onUnload <- function(libpath) {

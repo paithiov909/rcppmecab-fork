@@ -37,8 +37,8 @@ tagger_impl <- function(functions) {
             functions$df(vec, sys_dic, user_dic)
           )
         }) %>%
-        dplyr::mutate(across(where(is.character), ~ reset_encoding(.))) %>%
-        dplyr::mutate(across(where(is.character), ~ dplyr::na_if(., "*"))) %>%
+        dplyr::mutate(dplyr::across(where(is.character), ~ reset_encoding(.))) %>%
+        dplyr::mutate(dplyr::across(where(is.character), ~ dplyr::na_if(., "*"))) %>%
         dplyr::mutate(
           doc_id = as.factor(.data$doc_id),
           sentence_id = as.factor(.data$sentence_id)

@@ -23,7 +23,8 @@ Imports:
     Rcpp,
     RcppParallel,
     rlang (>= 0.1.2),
-    stringi
+    stringi,
+    utils
 Suggests:
     reticulate,
     roxygen2,

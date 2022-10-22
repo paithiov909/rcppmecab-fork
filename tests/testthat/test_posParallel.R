@@ -1,6 +1,7 @@
-test_that("Test if posParallel works on Japanese", {
-  skip_on_ci()
-  skip_if_not(Sys.getenv("MECAB_LANG") == "ja", "MECAB_LANG is not ja. Skip testing.")
+skip_on_cran()
+
+test_that("posParallel works on Japanese", {
+  skip_if(Sys.getenv("MECAB_LANG") != "ja")
   ## posParallel(format = "list", join = TRUE)
   expect_equal(
     posParallel(
@@ -29,10 +30,7 @@ test_that("Test if posParallel works on Japanese", {
   )
 })
 
-test_that("Test if posParallel fails", {
-  skip_on_ci()
-  skip_if_not(Sys.getenv("MECAB_LANG") == "ja", "MECAB_LANG is not ja. Skip testing.")
-  ## posParallel()
+test_that("posParallel fails", {
   expect_error(posParallel(list()))
   expect_error(posParallel(factor()))
 })
