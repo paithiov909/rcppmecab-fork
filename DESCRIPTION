@@ -4,15 +4,17 @@ Version: 0.0.2
 Authors@R: c(
     person("Junhewk", "Kim", , "junhewk.kim@gmail.com", role = c("aut", "cre")),
     person("Akiru", "Kato", role = "aut"),
-    person("Kohei", "Watanabe", role = "ctb")
+    person("Kohei", "Watanabe", role = "ctb"),
+    person("Shogo", "Ichinose", role = "aut"),
+    person("Taku", "Kudo", role = "aut"),
+    person("Nippon Telegraph", "and Telephone Corporation", role = "cph")
   )
 Maintainer: Akiru Kato <paithiov909@gmail.com>
 Description: R package based on 'Rcpp' for 'MeCab': Yet Another
-    Part-of-Speech and Morphological Analyzer. The purpose of this
-    package is providing a seamless developing and analyzing environment
-    for CJK texts. This package utilizes parallel programming for
-    providing highly efficient text preprocessing 'posParallel()'
-    function.
+    Part-of-Speech and Morphological Analyzer. The purpose of this package
+    is providing a seamless developing and analyzing environment for CJK
+    texts. This package utilizes parallel programming for providing highly
+    efficient text preprocessing 'posParallel()' function.
 License: GPL (>= 3)
 BugReports: https://github.com/paithiov909/RcppMeCab/issues
 Depends: 
@@ -33,7 +35,6 @@ LinkingTo:
     BH,
     Rcpp,
     RcppParallel
-Config/testthat/edition: 3
 Config/reticulate:
   list(
     packages = list(
@@ -41,6 +42,7 @@ Config/reticulate:
       list(pacakge = "ipadic")
     )
   )
+Config/testthat/edition: 3
 Encoding: UTF-8
 Language: en-US
 RoxygenNote: 7.2.1
