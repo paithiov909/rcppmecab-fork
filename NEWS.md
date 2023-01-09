@@ -1,3 +1,7 @@
+# RcppMeCab 0.0.3
+
++ Refactored `isBlank` function.
+
 # RcppMeCab 0.0.2
 
 + When `format="data.frame"`, the function returns 'doc_id' and 'sentence_id' as factors.
