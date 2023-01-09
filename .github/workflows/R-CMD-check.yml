@@ -65,6 +65,6 @@ jobs:
         env:
           MECAB_LANG: ${{ matrix.mecab_lang }}
         with:
-          args: '"--no-multiarch", "--no-manual", "--as-cran"'
-          build_args: '"--no-manual", "--no-build-vignettes"'
+          args: 'c("--no-vignettes", "--no-manual", "--ignore-vignettes")'
+          build_args: 'c("--no-build-vignettes", "--no-manual")'
           error-on: '"error"'
