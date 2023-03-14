@@ -1,6 +1,6 @@
 Package: RcppMeCab
 Title: 'Rcpp' Wrapper for 'MeCab' Library
-Version: 0.0.3
+Version: 0.0.4
 Authors@R: c(
     person("Junhewk", "Kim", , "junhewk.kim@gmail.com", role = c("aut", "cre")),
     person("Akiru", "Kato", role = "aut"),
@@ -35,15 +35,8 @@ LinkingTo:
     BH,
     Rcpp,
     RcppParallel
-Config/reticulate:
-  list(
-    packages = list(
-      list(package = "mecab-ko-dic", pip = TRUE),
-      list(pacakge = "ipadic", pip = TRUE)
-    )
-  )
 Config/testthat/edition: 3
 Encoding: UTF-8
 Language: en-US
 RoxygenNote: 7.2.3
-SystemRequirements: C++11 GNU make, MeCab
+SystemRequirements: GNU make, MeCab
