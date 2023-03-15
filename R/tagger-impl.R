@@ -37,7 +37,6 @@ tagger_impl <- function(functions) {
             functions$df(vec, sys_dic, user_dic)
           )
         }) %>%
-        dplyr::mutate(dplyr::across(where(is.character), ~ reset_encoding(.))) %>%
         dplyr::mutate(dplyr::across(where(is.character), ~ dplyr::na_if(., "*"))) %>%
         dplyr::mutate(
           doc_id = as.factor(.data$doc_id),
@@ -47,15 +46,10 @@ tagger_impl <- function(functions) {
       if (isTRUE(join)) {
         result <-
           functions$join(sentence, sys_dic, user_dic) %>%
-          purrr::map(reset_encoding) %>%
           purrr::set_names(nm)
       } else {
         result <-
           functions$base(sentence, sys_dic, user_dic) %>%
-          purrr::map(function(elem) {
-            names(elem) <- reset_encoding(names(elem))
-            reset_encoding(elem)
-          }) %>%
           purrr::set_names(nm)
       }
     }

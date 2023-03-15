@@ -1,6 +1,6 @@
 Package: RcppMeCab
 Title: 'Rcpp' Wrapper for 'MeCab' Library
-Version: 0.0.4
+Version: 0.0.5
 Authors@R: c(
     person("Junhewk", "Kim", , "junhewk.kim@gmail.com", role = c("aut", "cre")),
     person("Akiru", "Kato", role = "aut"),

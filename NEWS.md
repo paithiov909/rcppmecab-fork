@@ -1,3 +1,7 @@
+# RcppMeCab 0.0.5
+
++ For performance, `tagger_impl` now skips resetting the output encodings to UTF-8.
+
 # RcppMeCab 0.0.3
 
 + Refactored `isBlank` function.

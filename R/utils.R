@@ -40,16 +40,6 @@ is.blank.character <- function(x) {
 #' @export
 is_blank <- isBlank
 
-#' Format Character Vector
-#' @noRd
-#' @keywords internal
-reset_encoding <- function(vec, enc = "UTF-8") {
-  purrr::map_chr(vec, function(elem) {
-    Encoding(elem) <- enc
-    return(elem)
-  })
-}
-
 #' Pipe operator
 #'
 #' Reexported pipe originally from magrittr's pipe operator.
