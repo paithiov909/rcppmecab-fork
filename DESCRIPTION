@@ -1,12 +1,13 @@
 Package: RcppMeCab
 Title: 'Rcpp' Wrapper for 'MeCab' Library
-Version: 0.0.5
+Version: 0.0.6
 Authors@R: c(
     person("Junhewk", "Kim", , "junhewk.kim@gmail.com", role = c("aut", "cre")),
     person("Akiru", "Kato", role = "aut"),
     person("Kohei", "Watanabe", role = "ctb"),
     person("Shogo", "Ichinose", role = "aut"),
     person("Taku", "Kudo", role = "aut"),
+    person("Jorge", "Nocedal", role = "ctb"),
     person("Nippon Telegraph", "and Telephone Corporation", role = "cph")
   )
 Maintainer: Akiru Kato <paithiov909@gmail.com>
@@ -17,7 +18,7 @@ Description: R package based on 'Rcpp' for 'MeCab': Yet Another
     efficient text preprocessing 'posParallel()' function.
 License: GPL (>= 3)
 BugReports: https://github.com/paithiov909/RcppMeCab/issues
-Depends: 
+Depends:
     R (>= 3.4.0)
 Imports:
     dplyr (>= 0.8.0),
