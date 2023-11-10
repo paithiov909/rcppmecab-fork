@@ -1,6 +1,7 @@
 ^.*\.Rproj$
 ^\.Rproj\.user$
 ^\.github$
+^\.vscode$
 ^mecab$
 ^cran-comments\.md$
 ^LICENSE\.md$

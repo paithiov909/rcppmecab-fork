@@ -1,6 +1,6 @@
 Package: RcppMeCab
 Title: 'Rcpp' Wrapper for 'MeCab' Library
-Version: 0.0.6
+Version: 0.0.7
 Authors@R: c(
     person("Junhewk", "Kim", , "junhewk.kim@gmail.com", role = c("aut", "cre")),
     person("Akiru", "Kato", role = "aut"),
@@ -29,7 +29,6 @@ Imports:
     stringi,
     utils
 Suggests:
-    reticulate,
     roxygen2,
     testthat (>= 3.0.0)
 LinkingTo:

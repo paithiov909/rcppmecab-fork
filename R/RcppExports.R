@@ -99,5 +99,5 @@ posLoopDFRcpp <- function(text, sys_dic, user_dic) {
 
 # Register entry points for exported C++ functions
 methods::setLoadAction(function(ns) {
-    .Call('_RcppMeCab_RcppExport_registerCCallable', PACKAGE = 'RcppMeCab')
+    .Call(`_RcppMeCab_RcppExport_registerCCallable`)
 })
