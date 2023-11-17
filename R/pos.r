@@ -38,14 +38,14 @@
 #' }
 #'
 #' @export
-pos <- function(sentence, join = TRUE, format = c("list", "data.frame"), sys_dic = "", user_dic = "") {
-  tagger <-
-    tagger_impl(
-      list(
-        df = posLoopDFRcpp,
-        join = posLoopJoinRcpp,
-        base = posLoopRcpp
-      )
-    )
-  tagger(sentence, join, format, sys_dic, user_dic)
+pos <- function(sentence,
+                join = TRUE,
+                format = c("list", "data.frame"),
+                sys_dic = "",
+                user_dic = "") {
+  .Deprecated(
+    "posParallel", package = "RcppMeCab",
+    msg = "This fork does not support `pos()`. Using `posParallel()` instead."
+  )
+  posParallel(sentence, join = join, format = format, sys_dic = sys_dic, user_dic = user_dic)
 }

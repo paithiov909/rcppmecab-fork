@@ -21,4 +21,6 @@
 #' }
 #'
 #' @keywords MeCab part-of-speech morpheme nlp Korean Japanese Chinese
+#' @import gibasa
+#' @importFrom stats setNames
 "_PACKAGE"

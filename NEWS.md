@@ -1,3 +1,7 @@
+# RcppMeCab 0.1.0
+
++ As of v0.1.0, this fork has been changed to wrap the 'gibasa' package, instead of wrapping the 'MeCab' API via 'Rcpp' by itself. If you need the old version, use [paithiov909/RcppMeCab at v0.0.x branch](https://github.com/paithiov909/RcppMeCab/tree/v0.0.x).
+
 # RcppMeCab 0.0.5
 
 + For performance, `tagger_impl` now skips resetting the output encodings to UTF-8.

@@ -43,16 +43,38 @@
 #' }
 #'
 #' @export
-posParallel <- function(sentence, join = TRUE, format = c("list", "data.frame"), sys_dic = "", user_dic = "") {
-  tagger <-
-    tagger_impl(
-      list(
-        df = posParallelDFRcpp,
-        join = posParallelJoinRcpp,
-        base = posParallelRcpp
-      )
-    )
-  tagger(sentence, join, format, sys_dic, user_dic)
+posParallel <- function(sentence,
+                        join = TRUE,
+                        format = c("list", "data.frame"),
+                        sys_dic = "",
+                        user_dic = "") {
+  format <- match.arg(format, choices = c("list", "data.frame"))
+  into <- ifelse(
+    Sys.getenv("MECAB_LANG") != "ja",
+    list(gibasa::get_dict_features("ko-dic")),
+    list(gibasa::get_dict_features("ipa"))
+  )
+  split <- ifelse(
+    isTRUE(getOption("mecabSplit")),
+    TRUE,
+    FALSE
+  )
+  sys_dic <- ifelse(
+    !is.null(getOption("mecabSysDic")),
+    as.character(getOption("mecabSysDic")),
+    ""
+  )
+  dat <- gibasa::tokenize(sentence, sys_dic = sys_dic, user_dic = user_dic, split = split)
+  dat <- gibasa::prettify(dat, into = unlist(into), col_select = c(1, 2, 8))
+  colnames(dat) <- c("doc_id", "sentence_id", "token_id", "token", "pos", "subtype", "analytic")
+
+  if (format == "data.frame") {
+    return(dat)
+  } else {
+    if (join) { dat$token <- paste(dat$token, dat$pos, sep = "/") }
+    pos_field <- unlist(ifelse(join, list(NULL), list("pos")))
+    gibasa::as_tokens(dat, pos_field = pos_field)
+  }
 }
 
 #' Alias of `posParallel`
