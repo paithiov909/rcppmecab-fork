@@ -13,7 +13,6 @@ Description: R package based on 'Rcpp' for 'MeCab': Yet Another
     texts. This package utilizes parallel programming for providing highly
     efficient text preprocessing 'posParallel()' function.
 License: GPL (>= 3)
-BugReports: https://github.com/paithiov909/RcppMeCab/issues
 Depends:
     R (>= 3.4.0)
 Imports:
