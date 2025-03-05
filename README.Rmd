@@ -22,6 +22,7 @@ pkgload::load_all(".")
 > This repo is a fork from [junhewk/RcppMeCab](https://github.com/junhewk/RcppMeCab).
 >
 > As of v0.1.0, this fork has been changed to wrap the [gibasa](https://github.com/paithiov909/gibasa) package, instead of wrapping the 'MeCab' API via 'Rcpp' by itself. If you need the old version, use v0.0.x branch.
+
 ---
 
 This package, RcppMeCab, is an 'Rcpp' wrapper for the part-of-speech morphological analyzer MeCab. It supports native utf-8 encoding in C++ code and CJK (Chinese, Japanese, and Korean) MeCab library. This package fully utilizes the power Rcpp brings R computation to analyze texts faster.

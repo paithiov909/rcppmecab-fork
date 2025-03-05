@@ -9,7 +9,7 @@
 > This repo is a fork from
 > [junhewk/RcppMeCab](https://github.com/junhewk/RcppMeCab).
 >
-> ## As of v0.1.0, this fork has been changed to wrap the [gibasa](https://github.com/paithiov909/gibasa) package, instead of wrapping the ‘MeCab’ API via ‘Rcpp’ by itself. If you need the old version, use v0.0.x branch.
+> As of v0.1.0, this fork has been changed to wrap the [gibasa](https://github.com/paithiov909/gibasa) package, instead of wrapping the ‘MeCab’ API via ‘Rcpp’ by itself. If you need the old version, use v0.0.x branch.
 
 This package, RcppMeCab, is an ‘Rcpp’ wrapper for the part-of-speech
 morphological analyzer MeCab. It supports native utf-8 encoding in C++
@@ -47,7 +47,7 @@ pos(sentence) # returns list
 #> Warning in pos(sentence): This fork does not support `pos()`. Using
 #> `posParallel()` instead.
 #> $`1`
-#>  [1] "雨/名詞"   "に/助詞"   "も/助詞"   "負け/動詞" "ず/助動詞" "、/記号"  
+#>  [1] "雨/名詞"   "に/助詞"   "も/助詞"   "負け/動詞" "ず/助動詞" "、/記号"
 #>  [7] "風/名詞"   "に/助詞"   "も/助詞"   "負け/動詞" "ず/助動詞"
 
 ## 'join = FALSE'を指定すると、戻り値はnamed list of named character vectorsになる。
@@ -56,7 +56,7 @@ pos(sentence, join = FALSE) # for yielding morphemes only (tags will be given on
 #> Warning in pos(sentence, join = FALSE): This fork does not support `pos()`.
 #> Using `posParallel()` instead.
 #> $`1`
-#>   名詞   助詞   助詞   動詞 助動詞   記号   名詞   助詞   助詞   動詞 助動詞 
+#>   名詞   助詞   助詞   動詞 助動詞   記号   名詞   助詞   助詞   動詞 助動詞
 #>   "雨"   "に"   "も" "負け"   "ず"   "、"   "風"   "に"   "も" "負け"   "ず"
 
 ## 'format = data.frame'にすると、戻り値は以下のようなデータフレームになる。
@@ -67,23 +67,23 @@ pos(sentence, format = "data.frame") # the result will returned as a data frame 
 #> Warning in pos(sentence, format = "data.frame"): This fork does not support
 #> `pos()`. Using `posParallel()` instead.
 #> # A tibble: 11 × 7
-#>    doc_id sentence_id token_id token pos    subtype analytic 
-#>    <fct>        <int>    <int> <chr> <chr>  <chr>   <chr>    
+#>    doc_id sentence_id token_id token pos    subtype analytic
+#>    <fct>        <int>    <int> <chr> <chr>  <chr>   <chr>
 #>  1 1                1        1 雨    名詞   一般    アメ,アメ
-#>  2 1                1        2 に    助詞   格助詞  ニ,ニ    
-#>  3 1                1        3 も    助詞   係助詞  モ,モ    
+#>  2 1                1        2 に    助詞   格助詞  ニ,ニ
+#>  3 1                1        3 も    助詞   係助詞  モ,モ
 #>  4 1                1        4 負け  動詞   自立    マケ,マケ
-#>  5 1                1        5 ず    助動詞 <NA>    ズ,ズ    
-#>  6 1                1        6 、    記号   読点    、,、    
+#>  5 1                1        5 ず    助動詞 <NA>    ズ,ズ
+#>  6 1                1        6 、    記号   読点    、,、
 #>  7 1                1        7 風    名詞   一般    カゼ,カゼ
-#>  8 1                1        8 に    助詞   格助詞  ニ,ニ    
-#>  9 1                1        9 も    助詞   係助詞  モ,モ    
+#>  8 1                1        8 に    助詞   格助詞  ニ,ニ
+#>  9 1                1        9 も    助詞   係助詞  モ,モ
 #> 10 1                1       10 負け  動詞   自立    マケ,マケ
 #> 11 1                1       11 ず    助動詞 <NA>    ズ,ズ
 
 posParallel(sentence) # parallelized version uses more memory, but much faster than the loop in single threading
 #> $`1`
-#>  [1] "雨/名詞"   "に/助詞"   "も/助詞"   "負け/動詞" "ず/助動詞" "、/記号"  
+#>  [1] "雨/名詞"   "に/助詞"   "も/助詞"   "負け/動詞" "ず/助動詞" "、/記号"
 #>  [7] "風/名詞"   "に/助詞"   "も/助詞"   "負け/動詞" "ず/助動詞"
 ```
 
